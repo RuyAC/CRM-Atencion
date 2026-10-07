@@ -1,0 +1,30 @@
+.admin-reference .a-workspace{margin-left:277px}
+.admin-reference .st-sidebar{width:277px;padding:5px 9px 9px;gap:0;color:#0f172a;border-color:#dfe7f1;overflow-y:auto}
+.st-sidebar .a-brand{height:30px;padding:0;margin:0 0 13px}
+.st-sidebar .brand-logo{gap:3px}
+.st-sidebar .brand-icon{border-radius:6px}
+.st-sidebar .brand-word{font-size:24px;font-weight:900;letter-spacing:-1px}
+.st-sidebar .brand-dot{color:#ff5b00}
+.st-establishment{min-height:50px;border:1px solid #edf2f7;background:#f8fafc;border-radius:17px;display:flex;align-items:center;gap:10px;padding:8px;margin-bottom:12px}
+.st-establishment>span{display:grid;place-items:center;width:32px;height:32px;border-radius:13px;background:#ff5b00;color:white;font-size:14px;font-weight:700;flex-shrink:0}
+.st-establishment>div{min-width:0}.st-establishment strong{display:block;font-size:12px;line-height:16px;overflow-wrap:anywhere}.st-establishment small{display:block;font-size:10px;line-height:14px;color:#c54400;font-weight:600;overflow-wrap:anywhere}
+.st-private-row{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #edf2f7;padding:10px 0 13px;font-size:10px;color:#49617f}
+.st-private-row>span{display:flex;align-items:center;gap:5px;background:#f1f5f9;border-radius:20px;padding:2px 8px;font-weight:600}.st-private-row>span svg{color:#059669}.admin-reference .st-private-row button{background:none;border:0;color:#596f8d;display:flex;align-items:center;gap:4px;padding:3px 8px;font-size:10px}
+.st-plan-row{padding:8px 0 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #edf2f7;margin-bottom:28px;font-size:12px}.st-plan-row strong{display:flex;align-items:center;gap:6px}.st-plan-row i{width:8px;height:8px;border-radius:50%;background:#00b982}.st-plan-row>a{font-size:10px;text-decoration:underline;color:#c54400;font-weight:600}
+.admin-reference .st-sidebar nav{gap:4px;margin-bottom:18px}
+.admin-reference .st-sidebar nav a{min-height:36px;padding:9px 14px;gap:12px;font-size:12px;font-weight:600;color:#334a69;border-radius:13px;line-height:16px}
+.admin-reference .st-sidebar nav a>svg{color:#6b83a3;stroke-width:1.8}
+.admin-reference .st-sidebar nav a.active,.admin-reference .st-sidebar nav a.active:hover{background:#f50046;color:white}
+.admin-reference .st-sidebar nav a.active>svg{color:white}
+.st-live-label{display:block;padding:3px 9px;border-radius:18px;background:#e1fcf0;color:#15835f;font-size:9px;font-weight:800;line-height:12px;margin-left:auto}
+.st-tutorial{width:100%;border:1px solid #ffcbd5;border-radius:16px;min-height:50px;background:#fff5f5;display:flex;align-items:center;gap:10px;padding:8px 10px;margin-bottom:22px;text-align:left}
+.st-tutorial>span{width:29px;height:29px;background:#ff7600;border-radius:50%;color:white;display:grid;place-items:center;flex-shrink:0}
+.st-tutorial>div{flex:1;min-width:0}.st-tutorial strong{font-size:12px;line-height:15px;display:block}.st-tutorial small{font-size:10px;line-height:13px;color:#596f8d;display:block}.st-tutorial b{font-size:9px;color:#d5003d;background:white;border:1px solid #ffd2de;border-radius:14px;padding:1px 7px;white-space:nowrap}
+.st-saas-link{display:flex;align-items:center;gap:10px;min-height:44px;padding:10px 14px;margin-bottom:12px;border:1px solid #ffd2de;border-radius:12px;background:#fff5f5;color:#a90032;font-size:12px;font-weight:650}.st-saas-link>svg:last-child{margin-left:auto}.st-saas-link:hover{background:#fff0f1}.st-saas-link:focus-visible{outline:2px solid #a90032;outline-offset:3px}
+.st-sidebar-tools{margin:auto -9px -9px;border-top:1px solid #edf2f7;padding:16px 8px 8px;display:flex;flex-direction:column;gap:12px;background:#fbfcfe}
+.st-sidebar-tools>a{min-height:36px;border-radius:12px;padding:9px 12px;display:flex;align-items:center;gap:8px;font-size:12px;line-height:16px}
+.st-sidebar-tools>a>svg:last-child{margin-left:auto;color:#7c91ad}.st-sidebar-tools>a>strong{font-size:12px;overflow-wrap:anywhere}.st-sidebar-tools .st-tv-link{background:#0f172a;color:white}.st-sidebar-tools .st-client-link{background:white;border:1px solid #dce5f0;box-shadow:0 1px 2px #0f172a08}
+.st-monitor-links{display:grid;grid-template-columns:1fr 1fr;gap:8px}.st-monitor-links>a{display:flex;align-items:center;justify-content:center;gap:6px;font-size:10px;min-height:30px;border:1px solid #dce5f0;border-radius:8px;color:#405775;background:white}.st-monitor-links>a:first-child{color:#d5003d;border-color:#ffc1d0;background:#fff1f3}
+@media(hover:hover){.st-sidebar-tools>a:hover,.st-monitor-links>a:hover{filter:brightness(.97)}.st-tutorial:hover{background:#fff0f1}}
+
+@media(max-width:760px){.admin-reference .a-workspace{margin-left:0}.admin-reference .st-sidebar{width:280px;padding:12px}.admin-reference .st-sidebar-tools{margin:10px -12px -12px}.admin-reference .st-sidebar nav a{min-height:40px}.admin-reference .st-private-row button{min-height:32px}.admin-reference .st-tutorial{min-height:52px}}

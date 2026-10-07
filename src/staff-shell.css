@@ -1,0 +1,6 @@
+.admin-app.staff-reference{background:#f8fafc;color:#0f172a}
+.staff-reference .a-main{padding:23px 24px 32px 32px;max-width:none}
+.staff-reference .a-topbar,.staff-reference .a-footer{display:none}
+.staff-reference .a-skip{left:309px}
+.networks-reference .a-main{padding:16px 23px 32px 32px}
+@media(max-width:760px){.staff-reference .a-topbar{display:flex}.staff-reference .a-main{padding:20px 16px 30px}.staff-reference .a-skip{left:16px}}
