@@ -14,7 +14,7 @@ export function createAccountSecurity({db,entries,publicOrigin,production,sendMa
   if(sendMail)return sendMail({to,subject,url});
   const key=process.env.RESEND_API_KEY,from=process.env.MAIL_FROM;
   fail(key&&from,'El servicio de correo no está configurado. Contacta a soporte.',503);
-  const response=await fetch('https://api.resend.com/emails',{method:'POST',signal:AbortSignal.timeout(15000),headers:{Authorization:`Bearer ${key}`,'Content-Type':'application/json'},body:JSON.stringify({from,to:[to],subject,text:`${subject}\n\nAbre este enlace de AUnToque:\n${url}\n\nSi no lo solicitaste, ignora este mensaje. El enlace tiene vencimiento y solo se puede usar una vez.`})});
+  const response=await fetch('https://api.resend.com/emails',{method:'POST',signal:AbortSignal.timeout(15000),headers:{Authorization:`Bearer ${key}`,'Content-Type':'application/json'},body:JSON.stringify({from,to:[to],subject,text:`${subject}\n\nAbre este enlace de Atencion:\n${url}\n\nSi no lo solicitaste, ignora este mensaje. El enlace tiene vencimiento y solo se puede usar una vez.`})});
   fail(response.ok,'No se pudo enviar el correo. Inténtalo más tarde.',503);
  }
  async function issue(entry,userId,scope,kind){
@@ -22,7 +22,7 @@ export function createAccountSecurity({db,entries,publicOrigin,production,sendMa
   const raw=randomBytes(32).toString('base64url'),hash=digest(raw),expires=Date.now()+(kind==='reset'?30*60000:24*3600000);
   db.prepare('DELETE FROM account_tokens WHERE expires<? OR (entry_id=? AND user_id=? AND kind=?)').run(Date.now(),entry.id,userId,kind);
   db.prepare('INSERT INTO account_tokens VALUES(?,?,?,?,?,?,?,?)').run(hash,entry.id,userId,scope,kind,user.email,digest(user.password_hash),expires);
-  try{await deliver(user.email,kind==='reset'?'AUnToque: restablece tu contraseña':'AUnToque: verifica tu correo',`${publicOrigin||'http://localhost:3001'}/${kind==='reset'?'reset-password':'verify-email'}#token=${raw}`);}catch(e){db.prepare('DELETE FROM account_tokens WHERE hash=?').run(hash);throw e;}
+  try{await deliver(user.email,kind==='reset'?'Atencion: restablece tu contraseña':'Atencion: verifica tu correo',`${publicOrigin||'http://localhost:3001'}/${kind==='reset'?'reset-password':'verify-email'}#token=${raw}`);}catch(e){db.prepare('DELETE FROM account_tokens WHERE hash=?').run(hash);throw e;}
  }
  async function action(name,payload,request,session){
   if(name==='auth.forgot'){

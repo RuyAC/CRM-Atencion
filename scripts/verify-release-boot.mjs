@@ -9,7 +9,7 @@ const destination=path.resolve(process.argv[2]||'');
 assert(process.argv[2],'Indica la carpeta de entrega.');
 verifyRelease(destination);
 assert(!existsSync(path.join(destination,'dist','uploads')));
-const dir=mkdtempSync(path.join(os.tmpdir(),'auntoque-release-boot-'));
+const dir=mkdtempSync(path.join(os.tmpdir(),'atencion-release-boot-'));
 let app;
 try {
   const {createApp}=await import(pathToFileURL(path.join(destination,'server','index.mjs')));
@@ -25,6 +25,6 @@ try {
 } finally {
   await app?.close();
   assert.equal(path.dirname(dir),os.tmpdir());
-  assert(path.basename(dir).startsWith('auntoque-release-boot-'));
+  assert(path.basename(dir).startsWith('atencion-release-boot-'));
   rmSync(dir,{recursive:true,force:true});
 }

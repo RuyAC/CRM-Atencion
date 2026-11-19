@@ -43,7 +43,7 @@ async function screenshots(){
 }
 let testMember,memberActor,monitorActor;
 try{
-  await page.goto(base+'/dashboard');await page.getByLabel('Correo electrónico',{exact:true}).fill('ventas@matebar.com');await page.getByLabel('Contraseña',{exact:true}).fill('Chamaii2026!');await page.getByRole('button',{name:'Entrar a mi cuenta',exact:true}).click();await page.getByRole('heading',{name:'Panel principal',exact:true}).waitFor();
+  await page.goto(base+'/dashboard');await page.getByLabel('Correo electrónico',{exact:true}).fill('ventas@matebar.com');await page.getByLabel('Contraseña',{exact:true}).fill('Atencion2026!');await page.getByRole('button',{name:'Entrar a mi cuenta',exact:true}).click();await page.getByRole('heading',{name:'Panel principal',exact:true}).waitFor();
   for(const id of ['manager-local','staff-local'])assert.equal((await action(context.request,'entity.delete',{entity:'staff',id})).status,200);
   assert.equal((await action(context.request,'entity.save',{entity:'staff',item:{id:'owner-local',name:'Administrador Mate bar'}})).status,200);
   if(!process.env.STAFF_SKIP_SCREENSHOTS){await screenshots();await writeFile(out+'/geometry.json',JSON.stringify(geometry,null,2));

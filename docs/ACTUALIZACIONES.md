@@ -12,7 +12,7 @@ node scripts/verify-product-ui.mjs
 node scripts/verify-account-ui.mjs
 node scripts/release.mjs prepare releases/2026-10-20-01
 node scripts/release.mjs verify releases/2026-10-20-01
-docker build -t auntoque:2026-10-20-01 releases/2026-10-20-01
+docker build -t atencion:2026-10-20-01 releases/2026-10-20-01
 ```
 
 Cada entrega usa una carpeta y una etiqueta nuevas. El inventario SHA256 detecta modificaciones accidentales; no es una firma de autenticidad. Verificar también la procedencia del paquete. La entrega excluye bases, claves, archivos de restaurantes y variables de entorno. El proceso rechaza compilaciones que incluyan `dist/uploads`.
@@ -37,3 +37,7 @@ Si el esquema y los datos siguen siendo compatibles, restaurar la etiqueta anter
 Un respaldo antiguo puede contener cuentas eliminadas posteriormente. Antes de reabrir una restauración, conciliar el registro de bajas posterior a la copia y volver a aplicar las eliminaciones correspondientes; no reactivar esas cuentas. Restringir el acceso a copias históricas y aplicar la política de conservación acordada.
 
 Docker, HTTPS público, correo y almacenamiento externo deben validarse en la infraestructura de destino. La verificación local no acredita esas integraciones.
+
+## Identidad Atencion — 19/11/2026
+
+Marca e identificadores unificados en Atencion. Los ejemplos de conexión usan servidor.local; las direcciones de pruebas de redes y de Docker son ficticias y funcionales. Las instalaciones existentes conservan su base de datos y sus contraseñas; las nuevas usan los valores de demostración documentados. Se requiere iniciar sesión otra vez por el cambio de cookie. Los respaldos locales de esquema v1 siguen siendo importables aunque su identificador use una marca anterior.

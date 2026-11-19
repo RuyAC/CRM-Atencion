@@ -7,7 +7,7 @@ function tourSteps(data){
   const tables=data.tables.filter(table=>table.active!==false);
   const table=tables.find(item=>item.number===1)||tables[0];
   return [
-    {theme:'welcome',icon:'bell',label:'Bienvenido a AUnToque',title:'¡Tu versión local ya está lista!',description:`Todo listo para modernizar la atención de ${restaurant}.`,rows:[
+    {theme:'welcome',icon:'bell',label:'Bienvenido a Atencion',title:'¡Tu versión local ya está lista!',description:`Todo listo para modernizar la atención de ${restaurant}.`,rows:[
       ['Todas las funciones disponibles','Acceso completo a las funciones del sistema para tu operación.'],
       ['Sin suscripciones ni cobros','Sin cobros automáticos ni compromisos de permanencia.'],
       ['Clientes sin aplicación','El cliente escanea el QR de la mesa y abre la página en su celular.'],
@@ -41,7 +41,7 @@ function tourSteps(data){
       ['Acceso propio para garzones','Garzones y gerentes atienden y finalizan llamadas desde el celular.'],
       ['Reportes de atención','Consulta el tiempo medio de respuesta y las mesas con mayor movimiento.'],
       ['Soporte siempre a mano','Puedes volver a ver este recorrido cuando quieras desde el menú lateral.'],
-    ],tip:'¡Listo! Descarga los carteles de tus mesas y prueba AUnToque en vivo.',action:{label:'Ver equipo',href:'/dashboard/staff',permission:'staff'}},
+    ],tip:'¡Listo! Descarga los carteles de tus mesas y prueba Atencion en vivo.',action:{label:'Ver equipo',href:'/dashboard/staff',permission:'staff'}},
   ];
 }
 

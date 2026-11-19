@@ -33,7 +33,7 @@ async function ownedContext(options={}){
   });
   return ctx;
 }
-async function login(page,email='ventas@matebar.com',password='Chamaii2026!'){
+async function login(page,email='ventas@matebar.com',password='Atencion2026!'){
   await page.goto(base+'/dashboard');
   await page.getByLabel('Correo electrónico',{exact:true}).fill(email);
   await page.getByLabel('Contraseña',{exact:true}).fill(password);

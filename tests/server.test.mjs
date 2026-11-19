@@ -7,7 +7,7 @@ import { createApp } from '../server/index.mjs';
 import { periodStart } from '../server/reporting.mjs';
 
 async function fixture(dbPath = ':memory:') {
-  const mediaDir = mkdtempSync(path.join(os.tmpdir(), 'chamaii-test-media-'));
+  const mediaDir = mkdtempSync(path.join(os.tmpdir(), 'atencion-test-media-'));
   const app = createApp({ dbPath, mediaDir, port: 0, host: '127.0.0.1' });
   const address = await app.listen();
   const url = `http://127.0.0.1:${address.port}`;
@@ -23,7 +23,7 @@ function client(url) {
       const newCookie = response.headers.getSetCookie()[0]; if (newCookie) cookie = newCookie.split(';')[0];
       return { status: response.status, body: await response.json() };
     },
-    async login(email = 'ventas@matebar.com', password = 'Chamaii2026!') { const result = await this.action('auth.login', { email, password }); assert.equal(result.status, 200); return result; },
+    async login(email = 'ventas@matebar.com', password = 'Atencion2026!') { const result = await this.action('auth.login', { email, password }); assert.equal(result.status, 200); return result; },
     cookie: () => cookie,
   };
 }
@@ -49,12 +49,12 @@ test('authentication, role enforcement, PIN scope, password revocation and safe 
   assert.deepEqual((await owner.action('staff.pinReveal', { id: 'staff-local' })).body.result, { pin: '3456' });
   assert.equal((await staff.action('staff.pinReveal', { id: 'staff-local' })).status, 403);
   const secondOwner = client(f.url); await secondOwner.login();
-  assert.equal((await owner.action('auth.password', { current: 'Chamaii2026!', newPassword: 'Changed2026!' })).status, 200);
+  assert.equal((await owner.action('auth.password', { current: 'Atencion2026!', newPassword: 'Changed2026!' })).status, 200);
   assert.equal((await secondOwner.get()).body.viewer.user, null);
   assert.equal((await owner.get()).body.viewer.user.role, 'OWNER');
   assert.equal((await owner.action('auth.logout')).status, 200);
   assert.equal((await owner.get()).body.viewer.user, null);
-  assert.equal((await owner.action('auth.login', { email: 'ventas@matebar.com', password: 'Chamaii2026!' })).status, 401);
+  assert.equal((await owner.action('auth.login', { email: 'ventas@matebar.com', password: 'Atencion2026!' })).status, 401);
   await owner.login('ventas@matebar.com', 'Changed2026!');
 });
 
@@ -105,7 +105,7 @@ test('staff member can only complete own assigned requests; PIN cannot administe
 });
 
 test('CRUD, foreign category protection, QR rotation and persisted database survive restart', async t => {
-  const directory = mkdtempSync(path.join(os.tmpdir(), 'chamaii-test-db-'));
+  const directory = mkdtempSync(path.join(os.tmpdir(), 'atencion-test-db-'));
   const dbPath = path.join(directory, 'restaurant.sqlite');
   let f = await fixture(dbPath); t.after(async () => { await f.close(); rmSync(directory, { recursive: true, force: true }); });
   const owner = client(f.url); await owner.login();

@@ -34,7 +34,7 @@ test('registration creates an isolated restaurant owner, real registration date,
   assert.equal(state.tables.length,5);assert.equal(new Set(state.tables.map(table=>table.token)).size,5);assert(state.tables.every(table=>table.token.length>=24));
   for(const kind of ['products','categories','networks','orders','requests'])assert.deepEqual(state[kind],[]);
   assert.equal(state.staff.length,1);assert.equal(state.buttons.length,3);assert.match(account.monitorPin,/^\d{4}$/);
-  await platform.login('admin@local.test','Chamaii2026!');const catalogue=(await platform.get('/api/saas/state')).body;
+  await platform.login('admin@local.test','Atencion2026!');const catalogue=(await platform.get('/api/saas/state')).body;
   assert.equal(catalogue.summary.restaurants,2);assert.equal(catalogue.summary.accounts,2);
   const customer=catalogue.accounts.find(row=>row.email===account.email);assert(customer.createdAt);assert.equal(customer.restaurantId,account.restaurant.id);
   assert(!JSON.stringify(catalogue).includes('password_hash'));assert(!catalogue.accounts.some(row=>row.email==='admin@local.test'));
@@ -59,7 +59,7 @@ test('parallel registrations serialize email uniqueness, use independent slugs a
 
 test('menus, settings, staff, requests, reports and backups stay in their restaurant',async t=>{
   const f=await fixture();t.after(()=>f.close());const a=client(f),b=client(f),mate=client(f),customer=client(f);
-  const accountA=await register(a,'a@example.test','Restaurante A'),accountB=await register(b,'b@example.test','Restaurante B');await mate.login('ventas@matebar.com','Chamaii2026!');
+  const accountA=await register(a,'a@example.test','Restaurante A'),accountB=await register(b,'b@example.test','Restaurante B');await mate.login('ventas@matebar.com','Atencion2026!');
   const category=(await a.action('entity.save',{entity:'categories',item:{name:'Carta exclusiva A'}})).body.result;
   assert.equal((await a.action('settings.save',{settings:{welcomeTitle:'Bienvenido a A'}})).status,200);
   assert.equal((await b.get()).body.categories.length,0);assert.equal((await mate.get()).body.categories.length,4);
@@ -92,13 +92,13 @@ test('public QR and monitor PIN select the right restaurant without inheriting a
   assert.equal((await monitor.action('auth.pin',{restaurantSlug:registered.restaurant.slug,pin:registered.monitorPin})).status,200);
   assert.equal((await monitor.get(`/api/state?restaurant=${registered.restaurant.slug}&monitor=1`)).body.viewer.scope,'monitor');
   assert.equal((await monitor.get('/api/saas/state')).status,403);
-  await mate.login('ventas@matebar.com','Chamaii2026!');const foreign=(await mate.get(`/api/state?restaurant=${registered.restaurant.slug}&monitor=1`)).body;
+  await mate.login('ventas@matebar.com','Atencion2026!');const foreign=(await mate.get(`/api/state?restaurant=${registered.restaurant.slug}&monitor=1`)).body;
   assert.equal(foreign.viewer.user,null);assert.equal(foreign.viewer.monitorAuthorized,false);
 });
 
 test('SaaS remains exclusive and cannot operate any registered restaurant, even a public monitor',async t=>{
   const f=await fixture();t.after(()=>f.close());const owner=client(f),platform=client(f);const registered=await register(owner,'secure@example.test','Secure Nuevo');
-  const table=(await owner.get()).body.tables[0];await owner.action('settings.save',{settings:{tvRequirePin:false}});await platform.login('admin@local.test','Chamaii2026!');
+  const table=(await owner.get()).body.tables[0];await owner.action('settings.save',{settings:{tvRequirePin:false}});await platform.login('admin@local.test','Atencion2026!');
   for(const action of ['settings.save','request.create','backup.export'])assert.equal((await platform.action(action,{restaurantSlug:registered.restaurant.slug,token:table.token,type:'CALL',settings:{paused:true}})).status,403);
   const state=(await platform.get(`/api/state?restaurant=${registered.restaurant.slug}&monitor=1`)).body;assert.equal(state.viewer.monitorAuthorized,false);assert.deepEqual(state.requests,[]);
   assert.equal((await owner.get('/api/saas/state')).status,403);
@@ -114,7 +114,7 @@ test('uploads are partitioned and one restaurant cannot attach another restauran
 });
 
 test('registration persists through restart and restaurant restoration preserves other businesses and SaaS',async t=>{
-  const f=await fixture(true);t.after(()=>f.close());const a=client(f),b=client(f),platform=client(f);const account=await register(a,'persist-a@example.test','Persistente A');await register(b,'persist-b@example.test','Persistente B');await platform.login('admin@local.test','Chamaii2026!');
+  const f=await fixture(true);t.after(()=>f.close());const a=client(f),b=client(f),platform=client(f);const account=await register(a,'persist-a@example.test','Persistente A');await register(b,'persist-b@example.test','Persistente B');await platform.login('admin@local.test','Atencion2026!');
   const backup=(await a.action('backup.export')).body.result;
   await f.restart();assert.equal((await a.get()).body.restaurant.id,account.restaurant.id);assert.equal((await b.get()).body.restaurant.name,'Persistente B');
   assert.equal((await a.action('backup.restore',{backup})).status,200);assert.equal((await b.get()).body.viewer.user.email,'persist-b@example.test');

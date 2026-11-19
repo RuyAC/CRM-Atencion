@@ -80,9 +80,9 @@ translations = {
 'Método não permitido.':'El método no está permitido.',
 'Erro interno. Tente novamente.':'Ocurrió un error interno. Inténtalo de nuevo.',
 "'Atendente', 'Criado em', 'Atendido em', 'Finalizado em', 'Cancelado em', 'Espera (s)', 'Atendimento (s)', 'Total (s)'":"'Garzón', 'Creado', 'Aceptado', 'Finalizado', 'Cancelado', 'Espera (s)', 'Atención (s)', 'Total (s)'",
-'chamaii-relatorio-':'mate-bar-reporte-',
-'chamaii-backup-':'mate-bar-respaldo-',
-'Chamaii local:':'Mate bar local:',
+'atencion-relatorio-':'mate-bar-reporte-',
+'atencion-backup-':'mate-bar-respaldo-',
+'Atencion local:':'Mate bar local:',
 }
 source=Path('server/index.mjs')
 text=source.read_text(encoding='utf-8')

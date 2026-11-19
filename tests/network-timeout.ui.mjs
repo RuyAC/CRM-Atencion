@@ -31,7 +31,7 @@ try {
   admin.on('pageerror', error => errors.push(error.message));
   await admin.goto(base + '/dashboard');
   await admin.getByLabel('Correo electrónico', { exact: true }).fill('ventas@matebar.com');
-  await admin.getByLabel('Contraseña', { exact: true }).fill('Chamaii2026!');
+  await admin.getByLabel('Contraseña', { exact: true }).fill('Atencion2026!');
   await admin.getByRole('button', { name: 'Entrar a mi cuenta', exact: true }).click();
   await admin.getByRole('heading', { name: 'Panel principal', exact: true }).waitFor();
   const diagnostic = await (await context.request.get(base + '/api/network')).json();

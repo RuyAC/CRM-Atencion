@@ -1,8 +1,8 @@
 FROM node:24-bookworm-slim
-ENV NODE_ENV=production HOST=0.0.0.0 PORT=3001 DB_PATH=/var/lib/auntoque/data/platform.sqlite MEDIA_DIR=/var/lib/auntoque/uploads BACKUP_DIR=/var/backups/auntoque
+ENV NODE_ENV=production HOST=0.0.0.0 PORT=3001 DB_PATH=/var/lib/atencion/data/platform.sqlite MEDIA_DIR=/var/lib/atencion/uploads BACKUP_DIR=/var/backups/atencion
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --omit=dev && mkdir -p /var/lib/auntoque /var/backups/auntoque && chown -R node:node /var/lib/auntoque /var/backups/auntoque
+RUN npm ci --omit=dev && mkdir -p /var/lib/atencion /var/backups/atencion && chown -R node:node /var/lib/atencion /var/backups/atencion
 COPY dist ./dist
 COPY server ./server
 COPY shared ./shared

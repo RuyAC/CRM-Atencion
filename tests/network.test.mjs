@@ -14,7 +14,7 @@ const physicalInterfaces = {
 };
 
 async function fixture(t) {
-  const mediaDir = mkdtempSync(path.join(os.tmpdir(), 'chamaii-network-media-'));
+  const mediaDir = mkdtempSync(path.join(os.tmpdir(), 'atencion-network-media-'));
   const app = createApp({ dbPath: ':memory:', mediaDir, host: '127.0.0.1', port: 0 });
   let sourceIp = null;
   // Simulate LAN peers at the socket boundary; production still obtains its IP from the socket.
@@ -39,7 +39,7 @@ function client(url) {
     action: (action, payload = {}, headers = {}) => send('/api/action', {
       method: 'POST', headers: { 'Content-Type': 'application/json', ...headers }, body: JSON.stringify({ action, payload }),
     }),
-    async login(email = 'ventas@matebar.com', password = 'Chamaii2026!') {
+    async login(email = 'ventas@matebar.com', password = 'Atencion2026!') {
       const result = await this.action('auth.login', { email, password }); assert.equal(result.status, 200); return result;
     },
   };
@@ -174,7 +174,7 @@ test('strict proof stays bound to its client and changing the subnet invalidates
 
 test('local CIDR is persisted across restart and retained on partial network updates', async t => {
   t.mock.method(os, 'networkInterfaces', () => physicalInterfaces);
-  const directory = mkdtempSync(path.join(os.tmpdir(), 'chamaii-network-db-'));
+  const directory = mkdtempSync(path.join(os.tmpdir(), 'atencion-network-db-'));
   const options = { dbPath: path.join(directory, 'restaurant.sqlite'), mediaDir: path.join(directory, 'uploads'), host: '127.0.0.1', port: 0 };
   let app = createApp(options);
   t.after(async () => { await app.close(); rmSync(directory, { recursive: true, force: true }); });

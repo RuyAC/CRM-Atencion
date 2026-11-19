@@ -6,7 +6,7 @@ import path from 'node:path';
 const root = process.cwd();
 const directory = path.join(root, '.impeccable', 'review', 'account-separation');
 mkdirSync(directory, {recursive: true});
-const dbPath = path.join(root, 'data', 'chamaii.sqlite');
+const dbPath = path.join(root, 'data', 'atencion.sqlite');
 const db = new DatabaseSync(dbPath);
 const digest = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const entities = db.prepare('SELECT kind,id,data FROM entities ORDER BY kind,id').all();

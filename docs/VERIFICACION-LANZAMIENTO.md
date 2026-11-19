@@ -31,7 +31,7 @@ Antes del primer cliente, realizar una restauración desde la copia externa y un
 
 ## Revisión de producto
 
-Marca AUnToque unificada en paneles, acceso, correos, manifiesto e iconos; formatos internos de respaldo y nombres de variables se mantienen compatibles. La demo pública vive en /demo y no hace POST. Contacto, ayuda, términos y privacidad se enlazan desde la landing. Los datos reales del proveedor quedan pendientes por indicación del propietario; los documentos no se publican como definitivos.
+Marca Atencion unificada en paneles, acceso, correos, manifiesto e iconos; formatos internos de respaldo y nombres de variables se mantienen compatibles. La demo pública vive en /demo y no hace POST. Contacto, ayuda, términos y privacidad se enlazan desde la landing. Los datos reales del proveedor quedan pendientes por indicación del propietario; los documentos no se publican como definitivos.
 
 El backend local está disponible en el puerto 3001 y la vista previa 4173 reenvía /api y /uploads. Se comprobaron health, configuración pública y ruta de contacto con respuesta 200 en ambos puertos.
 

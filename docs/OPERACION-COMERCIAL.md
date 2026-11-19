@@ -1,4 +1,4 @@
-# AUnToque: venta, soporte y aceptación
+# Atencion: venta, soporte y aceptación
 
 Los datos reales del proveedor quedan pendientes por indicación del propietario. No se han inventado contactos, identidad, datos bancarios ni condiciones de devolución.
 

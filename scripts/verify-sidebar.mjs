@@ -72,7 +72,7 @@ try{
   const address=await app.listen();base=`http://127.0.0.1:${address.port}`;
   browser=await chromium.launch({headless:true,channel:'msedge'});context=await ownedContext();
   admin=await context.newPage();observe(admin);
-  await login(admin,'ventas@matebar.com','Chamaii2026!');
+  await login(admin,'ventas@matebar.com','Atencion2026!');
 
   await check('Las diez rutas comparten ancho, tipografía, espaciado y colores del sidebar',async()=>{
     let baseline,activePalette,inactivePalette,activeWeight;

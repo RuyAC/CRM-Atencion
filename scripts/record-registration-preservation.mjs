@@ -5,7 +5,7 @@ import path from 'node:path';
 
 const root=process.cwd(),out=path.join(root,'.impeccable/review/registration');
 mkdirSync(out,{recursive:true});
-const dbPath=path.join(root,'data/chamaii.sqlite'),db=new DatabaseSync(dbPath);
+const dbPath=path.join(root,'data/atencion.sqlite'),db=new DatabaseSync(dbPath);
 const tables=['meta','entities','credentials','requests','operations','platform_admins','saas_admin_grants','saas_accounts','saas_activity'];
 const hashes=Object.fromEntries(tables.map(table=>[table,createHash('sha256').update(JSON.stringify(db.prepare(`SELECT * FROM ${table} ORDER BY rowid`).all())).digest('hex')]));
 const counts=Object.fromEntries(db.prepare('SELECT kind,COUNT(*) AS total FROM entities GROUP BY kind').all().map(row=>[row.kind,row.total]));

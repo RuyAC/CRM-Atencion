@@ -3,7 +3,7 @@ import {mkdtempSync,mkdirSync,rmSync,writeFileSync} from 'node:fs';
 import os from 'node:os';import path from 'node:path';import assert from 'node:assert/strict';
 import {createApp} from '../server/index.mjs';
 const {chromium}=createRequire(import.meta.url)('C:/Users/ruyal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
-const dir=mkdtempSync(path.join(os.tmpdir(),'auntoque-free-demo-')),out=path.resolve('.impeccable/review/free-demo');mkdirSync(out,{recursive:true});
+const dir=mkdtempSync(path.join(os.tmpdir(),'atencion-free-demo-')),out=path.resolve('.impeccable/review/free-demo');mkdirSync(out,{recursive:true});
 let app,browser;const errors=[];
 try{
  app=createApp({dbPath:path.join(dir,'platform.sqlite'),mediaDir:path.join(dir,'uploads'),port:0,host:'127.0.0.1'});const address=await app.listen(),base=`http://127.0.0.1:${address.port}`;
@@ -19,4 +19,4 @@ try{
  const call=await context.request.post(base+'/api/action',{data:{action:'request.create',payload:{token:state.tables[0].token,type:'CALL'}}});assert.equal(call.status(),200);
  await page.goto(base+'/dashboard/billing');await page.getByText(/Demo gratis con todas las funciones y límites/).waitFor();await page.setViewportSize({width:390,height:844});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.screenshot({path:path.join(out,'billing-mobile.png'),fullPage:true});
  assert.deepEqual(errors,[]);writeFileSync(path.join(out,'results.json'),JSON.stringify({passed:true,checks:['CTA hacia registro','Elección Pro anual','Demo de siete días con una mesa inicial y límites del plan','Llamada real aceptada por el servidor','Aviso de vencimiento y móvil sin desbordamiento'],errors},null,2));console.log('Demo gratis verificada: registro, plan, una mesa, llamada real y móvil; sin errores JavaScript.');
-}finally{await browser?.close();await app?.close();assert.equal(path.dirname(dir),os.tmpdir());assert(path.basename(dir).startsWith('auntoque-free-demo-'));rmSync(dir,{recursive:true,force:true});}
+}finally{await browser?.close();await app?.close();assert.equal(path.dirname(dir),os.tmpdir());assert(path.basename(dir).startsWith('atencion-free-demo-'));rmSync(dir,{recursive:true,force:true});}

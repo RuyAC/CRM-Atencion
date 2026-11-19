@@ -36,7 +36,7 @@ try{
   ctx=await browser.newContext({viewport:{width:1119,height:841},reducedMotion:'reduce',serviceWorkers:'block'});
   await ctx.route('**/*',route=>new URL(route.request().url()).origin===base?route.continue():route.abort('blockedbyclient'));
   page=await ctx.newPage();page.setDefaultTimeout(10000);page.on('pageerror',error=>errors.push(error.message));
-  await action('auth.login',{email:'ventas@matebar.com',password:'Chamaii2026!'});
+  await action('auth.login',{email:'ventas@matebar.com',password:'Atencion2026!'});
   const initial=await state(),product=initial.products.find(item=>item.id==='produto-2')||initial.products[0];
   await action('entity.save',{entity:'products',item:{...product,name:'PRUEBA',price:2500,promoPrice:2000,description:'Plato de prueba funcional. No disponible para consumo.',tags:['Vegetariano'],featured:false,available:false,videoUrl:''}});
   await page.goto(base+'/dashboard/menu');await page.getByRole('heading',{name:'Menú digital',exact:true}).waitFor();

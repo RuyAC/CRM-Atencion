@@ -28,7 +28,7 @@ export function subscriptionStore(db,{production=false}={}){
   db.exec('BEGIN IMMEDIATE');try{write(value);db.prepare('INSERT INTO subscription_events VALUES(?,?,?,?)').run(randomUUID(),value.updatedAt,actor,JSON.stringify({before:old,after:value,paymentReference:String(payload.paymentReference||'').slice(0,200)}));db.exec('COMMIT');}catch(e){db.exec('ROLLBACK');throw e;}
   return snapshot();
  }
- function service(){if(!snapshot().serviceEnabled)error('El servicio está pendiente de activación, vencido o suspendido. Contacta a AUnToque.',402);}
+ function service(){if(!snapshot().serviceEnabled)error('El servicio está pendiente de activación, vencido o suspendido. Contacta a Atencion.',402);}
  function feature(key){if(!snapshot().planDetails[key])error('Esta función no está incluida en tu plan.');}
  function entity(kind,item,all){const p=snapshot().planDetails;
   const limit=kind==='tables'?p.tables:kind==='staff'?p.staff:kind==='buttons'?p.customButtons:null;

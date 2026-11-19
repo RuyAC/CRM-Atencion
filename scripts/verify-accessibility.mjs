@@ -5,7 +5,7 @@ const require=createRequire(import.meta.url),{chromium}=require(process.env.PLAY
 const browser=await chromium.launch({headless:true,channel:'msedge'}),page=await browser.newPage({viewport:{width:390,height:844}}),base=process.env.APP_URL||'http://127.0.0.1:3001';
 const results=[];
 try{
-  await page.goto(base+'/dashboard');await page.getByLabel('Correo electrónico',{exact:true}).fill('ventas@matebar.com');await page.getByLabel('Contraseña',{exact:true}).fill('Chamaii2026!');await page.getByRole('button',{name:'Entrar a mi cuenta'}).click();await page.getByRole('heading',{name:'Panel principal',exact:true}).waitFor();
+  await page.goto(base+'/dashboard');await page.getByLabel('Correo electrónico',{exact:true}).fill('ventas@matebar.com');await page.getByLabel('Contraseña',{exact:true}).fill('Atencion2026!');await page.getByRole('button',{name:'Entrar a mi cuenta'}).click();await page.getByRole('heading',{name:'Panel principal',exact:true}).waitFor();
   const skip=page.locator('.a-skip');assert(await skip.evaluate(el=>el.getBoundingClientRect().bottom<=0));await skip.focus();assert(await skip.evaluate(el=>el.getBoundingClientRect().top>=0&&el.getBoundingClientRect().right<=innerWidth));results.push({name:'Enlace de salto oculto, visible completo al enfocar',result:'passed'});
   const menu=page.locator('.a-mobile-menu');assert(await page.locator('.a-sidebar').evaluate(el=>el.inert));await menu.focus();await page.keyboard.press('Enter');assert(await page.locator('.a-sidebar').evaluate(el=>!el.inert));
   for(let i=0;i<20;i++){assert(await page.evaluate(()=>!!document.activeElement.closest('.a-sidebar')));await page.keyboard.press('Tab');}

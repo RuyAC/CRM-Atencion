@@ -48,7 +48,7 @@ export const entities = {
 };
 
 export const credentials = [
-  { id: 'owner-local', email: 'ventas@matebar.com', password: 'Chamaii2026!', pin: '1234' },
+  { id: 'owner-local', email: 'ventas@matebar.com', password: 'Atencion2026!', pin: '1234' },
   { id: 'manager-local', email: 'gerente@local.test', password: 'Gerente2026!', pin: '2345' },
   { id: 'staff-local', email: 'garcom@local.test', password: 'Garcom2026!', pin: '3456' },
 ];

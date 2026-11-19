@@ -1,4 +1,4 @@
-# AUnToque: lanzamiento y operación
+# Atencion: lanzamiento y operación
 
 El proyecto implementa registro multi-restaurante, planes, activación manual, vencimiento, gracia, recuperación de acceso, verificación de correo, respaldo completo y asistente inicial. Las credenciales, el dominio y las cuentas externas deben ser proporcionados por el operador. No se ha desplegado ningún servicio ni contratado infraestructura.
 

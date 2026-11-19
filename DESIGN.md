@@ -1,6 +1,6 @@
 ---
 name: Atencion
-description: Atención por mesa y menú multimedia, con composición basada en Chamaii.
+description: Atención por mesa y menú multimedia, con composición basada en Atencion.
 colors:
   saas-accent-hover: "#b60034"
   saas-muted: "#526277"
@@ -488,7 +488,7 @@ components:
 
 ## Overview
 
-**Regla de referencia.** La composición observada de Chamaii guía esta aplicación. El nombre de la aplicación Atencion, el restaurante Mate bar, el español y la moneda Bs prevalecen sobre la identidad de la referencia por decisión del usuario. La tipografía del sistema es una elección comprobada en la fuente, no una aproximación accidental.
+**Regla de referencia.** La composición observada de Atencion guía esta aplicación. El nombre de la aplicación Atencion, el restaurante Mate bar, el español y la moneda Bs prevalecen sobre la identidad de la referencia por decisión del usuario. La tipografía del sistema es una elección comprobada en la fuente, no una aproximación accidental.
 
 La administración utiliza superficies blancas, un fondo gris tenue y rosa para las acciones. El cliente ve una hoja centrada con una acción principal y dos acciones secundarias. El monitor mantiene contraste alto, tipografía grande y colas diferenciadas para lectura a distancia. Cocina y respaldos heredan el sistema administrativo; sus pantallas son implementación propia.
 
@@ -552,7 +552,7 @@ El contenido administrativo tiene una cabecera fija en la composición, un área
 
 Se verificaron 1440, 1280, 768 y 390 px, además de la entrada de reloj a 200 px. Las pantallas de administración y cliente no presentaron desborde horizontal en los recorridos probados; las tablas conservan su contenedor desplazable.
 
-La configuración reproduce la página continua observada en Chamaii: ocho enlaces internos, paneles completos visibles y guardado conjunto. Identidad agrupa el nombre y color, los datos de la empresa, la portada panorámica y el logotipo. Cada imagen admite enlace, carga, eliminación y selección predefinida. La bienvenida combina límites de 60/180 caracteres con una vista previa que cambia antes de guardar. El mapa usa Leaflet con pin arrastrable, círculo de radio y alternativa de teclado. Moneda, zona horaria, pausa y respaldos se mantienen en «Ajustes de la versión local».
+La configuración reproduce la página continua observada en Atencion: ocho enlaces internos, paneles completos visibles y guardado conjunto. Identidad agrupa el nombre y color, los datos de la empresa, la portada panorámica y el logotipo. Cada imagen admite enlace, carga, eliminación y selección predefinida. La bienvenida combina límites de 60/180 caracteres con una vista previa que cambia antes de guardar. El mapa usa Leaflet con pin arrastrable, círculo de radio y alternativa de teclado. Moneda, zona horaria, pausa y respaldos se mantienen en «Ajustes de la versión local».
 
 **Layout de Equipo.** Esta ruta usa la barra administrativa compartida de 277 px en escritorio y el área principal lleva padding `23px 24px 32px 32px`, sin límite de ancho. La cabecera y el pie administrativos se ocultan en escritorio. Banner de altura mínima 152 px, tres tarjetas de funciones de altura mínima 139 px con separación de 16 px y fichas de miembros de altura mínima 126 px conservan la referencia. El banner separa 28 px del título, el título 25 px de las funciones y estas 24 px de la lista. Los tokens de altura documentan mínimos, no alturas rígidas frente a textos que crecen.
 

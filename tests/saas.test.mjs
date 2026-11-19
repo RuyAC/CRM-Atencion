@@ -23,7 +23,7 @@ function client(url, initialCookie = '') {
   return {
     get: (route = '/api/state') => send(route),
     action: (action, payload = {}, headers = {}) => send('/api/action', { method: 'POST', headers: { 'Content-Type': 'application/json', ...headers }, body: JSON.stringify({ action, payload }) }),
-    async login(email = 'admin@local.test', password = 'Chamaii2026!') {
+    async login(email = 'admin@local.test', password = 'Atencion2026!') {
       const result = await this.action('auth.login', { email, password }); assert.equal(result.status, 200, result.body.error); return result;
     },
     cookie: () => cookie,
@@ -116,11 +116,11 @@ test('password changes and staff administration cannot cross the platform identi
   for (const id of ['owner-local', 'new-user']) assert.equal((await saveStaff(sales, { ...ownerInput, id, email: 'ADMIN@LOCAL.TEST' })).status, 409);
   assert.equal((await sales.action('staff.pinReveal', { id: principalId })).status, 403);
   assert.equal((await sales.action('staff.pinReveal', { id: 'owner-local' })).body.result.pin, '1234');
-  assert.equal((await admin.action('auth.password', { current: 'Chamaii2026!', newPassword: 'Platform2026!' })).status, 200);
+  assert.equal((await admin.action('auth.password', { current: 'Atencion2026!', newPassword: 'Platform2026!' })).status, 200);
   const another = client(f.url);
-  assert.equal((await another.action('auth.login', { email: 'admin@local.test', password: 'Chamaii2026!' })).status, 401);
+  assert.equal((await another.action('auth.login', { email: 'admin@local.test', password: 'Atencion2026!' })).status, 401);
   await another.login('admin@local.test', 'Platform2026!');
-  assert.equal((await sales.action('auth.password', { current: 'Chamaii2026!', newPassword: 'Restaurant2026!' })).status, 200);
+  assert.equal((await sales.action('auth.password', { current: 'Atencion2026!', newPassword: 'Restaurant2026!' })).status, 200);
   await another.login('admin@local.test', 'Platform2026!');
   await sales.login('ventas@matebar.com', 'Restaurant2026!');
   assert.equal((await saveStaff(sales, { id: 'owner-local', role: 'MANAGER' })).status, 400);
@@ -168,7 +168,7 @@ test('legacy restaurant backup email migrates without altering platform password
   backup.restaurant.contactEmail = 'admin@local.test';
   assert.equal((await sales.action('backup.restore', { backup })).status, 200);
   await sales.login('ventas@matebar.com', 'LegacyRestaurant2026!');
-  await admin.login('admin@local.test', 'Chamaii2026!');
+  await admin.login('admin@local.test', 'Atencion2026!');
   assert.equal((await sales.get()).body.restaurant.contactEmail, 'ventas@matebar.com');
   assert.equal((await admin.get('/api/saas/state')).body.accounts[0].email, 'ventas@matebar.com');
 });
@@ -198,7 +198,7 @@ test('identity migration preserves data and secrets, invalidates old cookies and
   const oldCredential = f.app.db.prepare('SELECT * FROM credentials WHERE id=?').get('owner-local');
   const preserved = f.app.db.prepare("SELECT * FROM entities WHERE kind<>'staff'").all();
   await f.close(); f = await fixture(dbPath);
-  const stale = client(f.url, 'chamaii_session=legacy-cookie');
+  const stale = client(f.url, 'atencion_session=legacy-cookie');
   assert.equal((await stale.get()).body.viewer.user, null); assert.equal((await stale.get('/api/saas/state')).status, 401);
   const currentCredential = f.app.db.prepare('SELECT * FROM credentials WHERE id=?').get('owner-local');
   assert.equal(currentCredential.email, 'ventas@matebar.com');

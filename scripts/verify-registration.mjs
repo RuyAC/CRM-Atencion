@@ -44,10 +44,10 @@ try{
     const snapshot=(await state(owner.ctx)).body;const table=snapshot.tables[0];await customer.page.goto(base+`/r/${snapshot.restaurant.slug}/t/${table.token}`);await customer.page.getByRole('button',{name:/Llamar al garzón/}).click();
     await owner.page.goto(base+'/dashboard');await owner.page.getByText('Mesa 01',{exact:true}).first().waitFor();assert.equal((await state(owner.ctx)).body.requests.length,1);
     const monitor=await context();await monitor.page.goto(base+`/tv/${snapshot.restaurant.slug}`);await monitor.page.getByText('Monitor de llamadas y salón',{exact:true}).waitFor();assert.equal((await state(monitor.ctx,`/api/state?restaurant=${snapshot.restaurant.slug}&monitor=1`)).body.viewer.monitorAuthorized,false);await monitor.ctx.close();
-    await action(mate.ctx,'auth.login',{email:'ventas@matebar.com',password:'Chamaii2026!'});assert.equal((await state(mate.ctx)).body.requests.length,0);
+    await action(mate.ctx,'auth.login',{email:'ventas@matebar.com',password:'Atencion2026!'});assert.equal((await state(mate.ctx)).body.requests.length,0);
   });
   await check('La cuenta creada aparece como cliente en las cuentas y restaurantes SaaS',async()=>{
-    await action(platform.ctx,'auth.login',{email:'admin@local.test',password:'Chamaii2026!'});await platform.page.goto(base+'/saas/accounts');await platform.page.getByRole('heading',{name:'Cuentas de AUnToque',exact:true}).waitFor();await platform.page.locator('.saas-account-table').getByText('ui-owner@example.test',{exact:true}).waitFor();assert.equal((await state(platform.ctx,'/api/saas/state')).body.summary.restaurants,2);await shot(platform.page,'saas-registered-account');
+    await action(platform.ctx,'auth.login',{email:'admin@local.test',password:'Atencion2026!'});await platform.page.goto(base+'/saas/accounts');await platform.page.getByRole('heading',{name:'Cuentas de Atencion',exact:true}).waitFor();await platform.page.locator('.saas-account-table').getByText('ui-owner@example.test',{exact:true}).waitFor();assert.equal((await state(platform.ctx,'/api/saas/state')).body.summary.restaurants,2);await shot(platform.page,'saas-registered-account');
     await platform.page.goto(base+'/saas/restaurants');await platform.page.locator('.saas-restaurant-table').getByText('Restaurante UI',{exact:true}).waitFor();assert.equal((await state(owner.ctx,'/api/saas/state')).status,403);
   });
   await check('Registro móvil, contraseña visible, confirmación y reingreso conservan el restaurante',async()=>{

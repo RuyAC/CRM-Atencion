@@ -1,3 +1,4 @@
+import {defaultDatabasePath} from './database-path.mjs';
 import {randomBytes, randomInt, randomUUID} from 'node:crypto';
 import {existsSync, mkdirSync, unlinkSync,rmSync,readdirSync,readFileSync,lstatSync} from 'node:fs';
 import {Readable} from 'node:stream';
@@ -35,7 +36,7 @@ export function createPlatformGateway(options, createRestaurantApp, defaults) {
   const entries = [];
   let serverErrors=0;
   let accountSecurity;
-  const dbPath = options.dbPath || path.join(ROOT, 'data', 'chamaii.sqlite');
+  const dbPath = options.dbPath || defaultDatabasePath(ROOT);
   const mediaDir = options.mediaDir || path.join(ROOT, 'public', 'uploads');
   const tenantDirectory = dbPath === ':memory:' ? null : path.join(path.dirname(path.resolve(dbPath)), 'tenants');
   const emailConflict = (email, exclude) => entries.some(entry => entry !== exclude && (
@@ -107,7 +108,7 @@ export function createPlatformGateway(options, createRestaurantApp, defaults) {
   async function runBackup(){fail(!backingUp,'Hay un respaldo en curso.',409);fail(options.backupDir||process.env.BACKUP_DIR,'Configura BACKUP_DIR.',503);backingUp=true;try{const root=options.backupDir||process.env.BACKUP_DIR;lastBackup=await createFullBackup(entries,mediaDir,root);verifyFullBackup(lastBackup.path);retainBackups(root);backupError=null;return lastBackup;}catch(error){backupError='Falló el respaldo; revisa almacenamiento y permisos.';throw error;}finally{backingUp=false;}}
   const backupTimer=setInterval(()=>{if((options.backupDir||process.env.BACKUP_DIR)&&!backingUp)runBackup().catch(()=>console.error(JSON.stringify({event:'backup_failed',time:new Date().toISOString()})));},Number(process.env.BACKUP_INTERVAL_HOURS||24)*3600000);backupTimer.unref();
   const sessionEntry = request => {
-    const raw = (request.headers.cookie || '').split(';').map(part => part.trim()).find(part => part.startsWith('chamaii_session='))?.slice('chamaii_session='.length);
+    const raw = (request.headers.cookie || '').split(';').map(part => part.trim()).find(part => part.startsWith('atencion_session='))?.slice('atencion_session='.length);
     if (!raw) return null;
     const key = digest(raw);
     return entries.find(entry => entry.app.db.prepare('SELECT user_id FROM sessions WHERE id_hash=? AND expires>?').get(key, Date.now())) || null;
@@ -121,7 +122,7 @@ export function createPlatformGateway(options, createRestaurantApp, defaults) {
     const current = limit && Date.now() - limit.since < 600000 ? limit : {count: 0, since: Date.now()};
     current.count++; registrationLimits.set(ip, current);
     fail(current.count <= 10, 'Demasiados intentos de registro. Espera diez minutos.', 429);
-    fail(!options.production||entries.length<Number(process.env.MAX_RESTAURANTS||500),'El registro está temporalmente cerrado. Contacta a AUnToque.',503);
+    fail(!options.production||entries.length<Number(process.env.MAX_RESTAURANTS||500),'El registro está temporalmente cerrado. Contacta a Atencion.',503);
     fail(['restaurantName', 'ownerName', 'email', 'password', 'confirmPassword'].every(key => typeof payload[key] === 'string'), 'Completa los datos del restaurante y del propietario.');
     const name = String(payload.restaurantName || '').trim();
     const ownerName = String(payload.ownerName || '').trim();
@@ -212,12 +213,12 @@ export function createPlatformGateway(options, createRestaurantApp, defaults) {
       if(['/api/account/payments.csv','/api/saas/payments.csv'].includes(url.pathname)&&request.method==='GET'){
         const restaurantId=url.pathname.startsWith('/api/account/')?(ownerAccess(session,request),session.app.restaurant().id):(platformAccess(session,request),null);
         async function* csv(){yield '\uFEFF'+['id','restaurante','fecha','importe_centavos','moneda','referencia','plan','ciclo','inicio','fin','anulado','motivo'].join(',')+'\r\n';for(const p of finance.iterate(restaurantId))yield [p.id,p.restaurantId,p.createdAt,p.amountCents,p.currency,p.reference,p.plan,p.interval,p.periodStart,p.periodEnd,p.voidedAt||'',p.voidReason||''].map(csvCell).join(',')+'\r\n';}
-        response.writeHead(200,{'Content-Type':'text/csv; charset=utf-8','Content-Disposition':'attachment; filename="auntoque-pagos.csv"','Cache-Control':'no-store'});await pipeline(Readable.from(csv()),response);return;
+        response.writeHead(200,{'Content-Type':'text/csv; charset=utf-8','Content-Disposition':'attachment; filename="atencion-pagos.csv"','Cache-Control':'no-store'});await pipeline(Readable.from(csv()),response);return;
       }
       if(url.pathname==='/api/account/state'&&request.method==='GET'){ownerAccess(session,request);json(response,200,{lifecycle:lifecycle(session.app.restaurant().id),payments:finance.list(session.app.restaurant().id),canDelete:session!==primary});return;}
       if(url.pathname==='/api/account/export'&&request.method==='GET'){
         ownerAccess(session,request);fail(!backingUp,'Espera a que termine el respaldo.',409);exporting.set(session,(exporting.get(session)||0)+1);
-        response.writeHead(200,{'Content-Type':'application/x-tar','Content-Disposition':'attachment; filename="auntoque-datos.tar"','Cache-Control':'no-store'});
+        response.writeHead(200,{'Content-Type':'application/x-tar','Content-Disposition':'attachment; filename="atencion-datos.tar"','Cache-Control':'no-store'});
         try{await pipeline(Readable.from(accountArchive(session,session===primary?mediaDir:path.join(mediaDir,session.id))),response);}finally{exporting.set(session,exporting.get(session)-1);}return;
       }
       if(url.pathname==='/api/saas/finance'&&request.method==='GET'){platformAccess(session,request);json(response,200,{payments:finance.list(),renewals:entries.map(e=>({restaurantId:e.app.restaurant().id,name:e.app.restaurant().name,...e.app.subscription.snapshot()})).filter(s=>s.endsAt&&Date.parse(s.endsAt)<=Date.now()+30*86400000),requests:primary.app.db.prepare("SELECT * FROM account_lifecycle WHERE status='pending'").all()});return;}

@@ -1,6 +1,6 @@
 services:
   app:
-    image: auntoque:${RELEASE_TAG:-local}
+    image: atencion:${RELEASE_TAG:-local}
     build:
       context: ..
       dockerfile: deploy/Dockerfile
@@ -10,8 +10,8 @@ services:
     environment:
       TRUSTED_PROXY_IPS: 172.30.0.2
     volumes:
-      - app_data:/var/lib/auntoque
-      - backups:/var/backups/auntoque
+      - app_data:/var/lib/atencion
+      - backups:/var/backups/atencion
     networks:
       backend:
         ipv4_address: 172.30.0.3
@@ -47,7 +47,7 @@ services:
       - restic_cache:/root/.cache/restic
       - offsite_status:/status
   monitor:
-    image: auntoque:${RELEASE_TAG:-local}
+    image: atencion:${RELEASE_TAG:-local}
     build:
       context: ..
       dockerfile: deploy/Dockerfile
@@ -59,8 +59,8 @@ services:
       disable: true
     read_only: true
     volumes:
-      - app_data:/var/lib/auntoque:ro
-      - backups:/var/backups/auntoque:ro
+      - app_data:/var/lib/atencion:ro
+      - backups:/var/backups/atencion:ro
       - offsite_status:/status:ro
     logging:
       options:

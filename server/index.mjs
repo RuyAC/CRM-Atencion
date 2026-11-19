@@ -1,3 +1,5 @@
+import {isLocalBackupFormat,LOCAL_BACKUP_FORMAT} from '../shared/backup-format.mjs';
+import {defaultDatabasePath} from './database-path.mjs';
 import http from 'node:http';
 import { DatabaseSync } from 'node:sqlite';
 import { randomBytes, randomUUID, createHmac, timingSafeEqual } from 'node:crypto';
@@ -24,7 +26,7 @@ const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; cha
   '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
   '.webp': 'image/webp', '.gif': 'image/gif', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.mp4': 'video/mp4', '.webm': 'video/webm',
   '.mov': 'video/quicktime', '.woff': 'font/woff', '.woff2': 'font/woff2' };
-const cookieName = 'chamaii_session';
+const cookieName = 'atencion_session';
 const DEMO_GENERAL = { id: 'tv-general', name: 'Equipo de atención', email: '', role: 'STAFF', active: true };
 
 class AppError extends Error { constructor(message, status = 400, code = 'VALIDATION') { super(message); this.status = status; this.code = code; } }
@@ -42,7 +44,7 @@ const baseSafeUrl = value => {
   return url;
 };
 
-function createRestaurantApp({ dbPath = path.join(ROOT, 'data', 'chamaii.sqlite'), mediaDir = path.join(ROOT, 'public', 'uploads'),
+function createRestaurantApp({ dbPath = defaultDatabasePath(ROOT), mediaDir = path.join(ROOT, 'public', 'uploads'),
   distDir = path.join(ROOT, 'dist'), port = 3001, host = '0.0.0.0', seed = null, publicOrigin = '', production = false, bootstrap = null, mediaQuotaBytes = Number.MAX_SAFE_INTEGER,
   mediaUrlPrefix = '/uploads/', emailConflict = () => false, identityConflict = () => false, restaurantConflict = () => false, restoreGuard = () => {},accountStatus=()=>({verified:true,required:false}),canServe=()=>true,onInternalError=()=>{} } = {}) {
   let seedRestaurant = seed?.restaurant || initialRestaurant;
@@ -561,7 +563,7 @@ function createRestaurantApp({ dbPath = path.join(ROOT, 'data', 'chamaii.sqlite'
     if (name === 'backup.export') { requireAdmin(request, true); return backup(); }
     if (name === 'backup.restore') {
       requireAdmin(request, true);
-      let content = payload.backup || payload.data; fail(content && content.format === 'chamaii-local-v1', 'Backup inválido.');
+      let content = payload.backup || payload.data; fail(content && isLocalBackupFormat(content.format), 'Backup inválido.');
       fail(content.restaurant && content.settings && content.entities && Array.isArray(content.requests), 'Backup incompleto.');
       for (const kind of KINDS) fail(Array.isArray(content.entities[kind]), 'Backup incompleto.');
       fail(Array.isArray(content.credentials) && content.entities.staff.some(member => member.role === 'OWNER' && member.active !== false), 'El respaldo debe contener un propietario activo.');
@@ -588,7 +590,7 @@ function createRestaurantApp({ dbPath = path.join(ROOT, 'data', 'chamaii.sqlite'
     throw new AppError('La acción no existe.', 404, 'ACTION_NOT_FOUND');
   }
   function backup() {
-    return { format: 'chamaii-local-v1', exportedAt: now(), restaurant: currentRestaurant(), settings: currentSettings(),
+    return { format: LOCAL_BACKUP_FORMAT, exportedAt: now(), restaurant: currentRestaurant(), settings: currentSettings(),
       entities: Object.fromEntries(KINDS.map(kind => [kind, kind === 'staff' ? all(kind).map(safeUser) : all(kind)])), requests: requests(),
       credentials: db.prepare('SELECT id,email,password_hash,pin_hash,pin_cipher FROM credentials').all().map(({pin_cipher,...member})=>({...member,pin:decryptPin(pin_cipher,pinKey)||null})),
       tvPin: decryptPin(getMeta('tv_pin_cipher'),pinKey) };
@@ -725,6 +727,6 @@ export function createApp(options = {}) {
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
   const app = createApp({ port: Number(process.env.PORT) || 3001, host: process.env.HOST || '0.0.0.0', dbPath: process.env.DB_PATH || undefined,mediaDir:process.env.MEDIA_DIR||undefined,mediaQuotaBytes:Number(process.env.MEDIA_QUOTA_BYTES)||undefined });
   const address = await app.listen();
-  console.log(`AUnToque local: http://localhost:${address.port}`);
+  console.log(`Atencion local: http://localhost:${address.port}`);
   for (const signal of ['SIGINT', 'SIGTERM']) process.once(signal, async () => { await app.close(); process.exit(0); });
 }

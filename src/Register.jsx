@@ -27,12 +27,12 @@ export default function Register() {
     catch(err){setError(err.message||'No se pudo crear la cuenta. Inténtalo de nuevo.');requestAnimationFrame(()=>errorRef.current?.focus());}
     finally{setBusy(false);}
   }
-  return <main className="a-login a-register"><a className="a-login-brand" href="/login" aria-label="AUnToque, inicio de sesión"><Logo/></a>
+  return <main className="a-login a-register"><a className="a-login-brand" href="/login" aria-label="Atencion, inicio de sesión"><Logo/></a>
     {result?<section className="a-login-box a-register-success" aria-labelledby="registration-title">
       <span className="a-login-icon"><Icon name="check-circle" size={29}/></span><h1 id="registration-title">Tu restaurante ya tiene cuenta</h1>
       <p><strong>{result.restaurant.name}</strong> está listo para configurar su menú. {demo?'Tu demo dura '+TRIAL_DAYS+' días: verifica el correo para probar todas las funciones del plan elegido.':'La atención se habilita al verificar el correo y activar el plan.'}</p>
       <dl><div><dt>Correo de acceso</dt><dd>{result.email}</dd></div><div><dt>Mesas iniciales</dt><dd>{demo?'1 mesa con su propio QR':'5 mesas con su propio QR'}</dd></div><div><dt>PIN del monitor</dt><dd className="a-register-pin">{result.monitorPin}</dd></div></dl>
-      <p className="a-register-help">{demo?'Tu plan seleccionado se guardó. No se realizará ningún cobro automático. Al finalizar la demo puedes contratarlo con AUnToque.':'Tu plan seleccionado se guardó. Coordina la activación y el pago con AUnToque.'} Guarda el PIN para conectar el monitor. También puedes consultarlo y cambiarlo en Configuración.</p>
+      <p className="a-register-help">{demo?'Tu plan seleccionado se guardó. No se realizará ningún cobro automático. Al finalizar la demo puedes contratarlo con Atencion.':'Tu plan seleccionado se guardó. Coordina la activación y el pago con Atencion.'} Guarda el PIN para conectar el monitor. También puedes consultarlo y cambiarlo en Configuración.</p>
       <a className="a-btn primary" href="/dashboard">Ir al panel de mi restaurante<Icon name="arrow-right" size={18}/></a>
     </section>:<section className="a-login-box" aria-labelledby="registration-title">
       <span className="a-login-icon"><Icon name="store" size={29}/></span><h1 id="registration-title">{demo?'Crea tu demo gratis':'Crea la cuenta de tu restaurante'}</h1>
@@ -53,6 +53,6 @@ export default function Register() {
       </form>
       <p className="a-register-login">¿Ya tienes cuenta? <a href="/login">Iniciar sesión</a></p>
     </section>}
-    <small>AUnToque · Atención inteligente, experiencia memorable.</small>
+    <small>Atencion · Atención inteligente, experiencia memorable.</small>
   </main>;
 }

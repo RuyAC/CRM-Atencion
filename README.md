@@ -1,18 +1,18 @@
-# AUnToque · SaaS para restaurantes
+# Atencion · SaaS para restaurantes
 
 Guía vigente de despliegue y operación: [docs/PRODUCCION.md](docs/PRODUCCION.md). Resultados y límites de la verificación: [docs/VERIFICACION-LANZAMIENTO.md](docs/VERIFICACION-LANZAMIENTO.md). Las instrucciones siguientes describen el entorno local de demostración; sus contraseñas no deben usarse en producción.
 
-# AUnToque · Atención y menú digital para Mate bar
+# Atencion · Atención y menú digital para Mate bar
 
-Versión local en español, con precios en bolivianos (Bs). Recrea el circuito observado de Chamaii: QR por mesa, llamada al garzón, solicitud de cuenta, menú con fotos y videos y pantallas de atención en vivo.
+Versión local en español, con precios en bolivianos (Bs). Recrea el circuito observado de Atencion: QR por mesa, llamada al garzón, solicitud de cuenta, menú con fotos y videos y pantallas de atención en vivo.
 
 ## Abrir la aplicación
 
-Abre **Iniciar AUnToque.cmd** con doble clic. Mantén la ventana abierta durante el servicio. El equipo necesita Node.js 24 LTS o superior; las dependencias y la aplicación preparada ya están incluidas en este espacio de trabajo. El inicio conserva los datos y reconoce si el servidor ya está abierto.
+Abre **Iniciar Atencion.cmd** con doble clic. Mantén la ventana abierta durante el servicio. El equipo necesita Node.js 24 LTS o superior; las dependencias y la aplicación preparada ya están incluidas en este espacio de trabajo. El inicio conserva los datos y reconoce si el servidor ya está abierto.
 
 - Administrador: http://localhost:3001/dashboard
 - Crear cuenta de restaurante: http://localhost:3001/register
-- Administración de AUnToque: http://localhost:3001/saas
+- Administración de Atencion: http://localhost:3001/saas
 - Cliente, Mesa 01: http://localhost:3001/r/mate-bar/t/table-01
 - Monitor: http://localhost:3001/tv/mate-bar
 - Vista compacta para reloj: http://localhost:3001/tv/mate-bar/watch
@@ -21,12 +21,12 @@ Los enlaces de mesa anteriores corresponden a la configuración inicial. Despué
 
 ## Accesos iniciales
 
-Los accesos están separados: `ventas@matebar.com` administra Mate bar en `/dashboard`; `admin@local.test` administra únicamente AUnToque en `/saas`. La cuenta SaaS no pertenece al equipo, no aparece como cliente y no permite operar el restaurante ni usar un PIN. Para cambiar de cuenta, abre **Entrar al restaurante** y usa sus credenciales. El panel SaaS incluye Resumen, Cuentas, Restaurantes y Actividad, con datos reales de todos los restaurantes registrados localmente. Las suscripciones mensuales y anuales se activan manualmente desde Restaurantes, con vencimiento y límites por plan. Los pagos se reciben fuera de la aplicación.
+Los accesos están separados: `ventas@matebar.com` administra Mate bar en `/dashboard`; `admin@local.test` administra únicamente Atencion en `/saas`. La cuenta SaaS no pertenece al equipo, no aparece como cliente y no permite operar el restaurante ni usar un PIN. Para cambiar de cuenta, abre **Entrar al restaurante** y usa sus credenciales. El panel SaaS incluye Resumen, Cuentas, Restaurantes y Actividad, con datos reales de todos los restaurantes registrados localmente. Las suscripciones mensuales y anuales se activan manualmente desde Restaurantes, con vencimiento y límites por plan. Los pagos se reciben fuera de la aplicación.
 
 | Perfil | Correo | Contraseña | PIN |
 |---|---|---|---|
-| Cliente propietario de Mate bar | ventas@matebar.com | Chamaii2026! | 1234 |
-| Administrador de AUnToque | admin@local.test | Chamaii2026! | Sin PIN |
+| Cliente propietario de Mate bar | ventas@matebar.com | Atencion2026! | 1234 |
+| Administrador de Atencion | admin@local.test | Atencion2026! | Sin PIN |
 | Gerente | gerente@local.test | Gerente2026! | 2345 |
 | Garzón | garcom@local.test | Garcom2026! | 3456 |
 
@@ -44,8 +44,8 @@ El registro funciona en esta instalación local y en los dispositivos que alcanz
 
 ## Usar teléfonos, tablet o televisor
 
-1. Conecta los dispositivos a la misma red del equipo que ejecuta AUnToque.
-2. En **Mesas → Dirección para los teléfonos**, elige la dirección de red detectada, por ejemplo `http://192.168.1.10:3001`, y guarda.
+1. Conecta los dispositivos a la misma red del equipo que ejecuta Atencion.
+2. En **Mesas → Dirección para los teléfonos**, elige la dirección de red detectada, por ejemplo `http://servidor.local:3001`, y guarda.
 3. Abre primero esa dirección en un teléfono para comprobar que alcanza el equipo. Si no abre, revisa la red, el aislamiento de clientes del router y el permiso de acceso de Node.js en el firewall de Windows.
 4. Descarga o imprime los QR. Ya apuntarán a esa dirección.
 5. En la tablet o televisor abre esa dirección seguida de `/tv/mate-bar` e introduce el PIN.
@@ -54,7 +54,7 @@ El registro funciona en esta instalación local y en los dispositivos que alcanz
 
 ## Redes autorizadas
 
-En **Redes autorizadas (Wi-Fi)**, la página reproduce el panel oscuro de conexión actual y las fichas de redes de la captura de Chamaii. Consulta la IP pública mediante ipify desde el navegador; requiere internet y no obtiene el nombre Wi-Fi ni su contraseña. **Registrar esta red** y **Guardar esta IP ahora** guardan la conexión directamente con el nombre «Wi-Fi del restaurante». **Registrar manualmente** abre el formulario; pulsa el nombre de una red para editarlo. Cada ficha permite activar/desactivar y eliminar con confirmación.
+En **Redes autorizadas (Wi-Fi)**, la página reproduce el panel oscuro de conexión actual y las fichas de redes de la captura de Atencion. Consulta la IP pública mediante ipify desde el navegador; requiere internet y no obtiene el nombre Wi-Fi ni su contraseña. **Registrar esta red** y **Guardar esta IP ahora** guardan la conexión directamente con el nombre «Wi-Fi del restaurante». **Registrar manualmente** abre el formulario; pulsa el nombre de una red para editarlo. Cada ficha permite activar/desactivar y eliminar con confirmación.
 
 Si hay una sola red local física disponible, el registro directo también la autoriza, según la elección del usuario. Con varias interfaces, se guarda la IP pública y puedes elegir la red local al editar. Esa autorización se guarda por separado y permite validar los dispositivos que llegan al servidor desde esa misma subred. Las interfaces virtuales conocidas, como WSL o VPN, se excluyen de la selección; el nombre del adaptador no garantiza identificar una VPN renombrada. La detección no cambia el modo de presencia: actívalo en Configuración cuando quieras exigir esa validación.
 
@@ -78,7 +78,7 @@ Una mesa conserva una sola solicitud activa. Dos personas que aceptan simultáne
 
 ## Datos y respaldos
 
-Mate bar y el registro de plataforma quedan en `data/chamaii.sqlite`, con su clave en `data/chamaii.sqlite.key`. Cada restaurante nuevo tiene su propia base y clave en `data/tenants`, y sus archivos dentro de un subdirectorio propio de `public/uploads`. Nunca elimines esas carpetas para reiniciar la aplicación.
+Mate bar y el registro de plataforma quedan en `data/atencion.sqlite`, con su clave en `data/atencion.sqlite.key`. Cada restaurante nuevo tiene su propia base y clave en `data/tenants`, y sus archivos dentro de un subdirectorio propio de `public/uploads`. Nunca elimines esas carpetas para reiniciar la aplicación.
 
 La opción **Descargar respaldo** exporta configuración, menú, mesas, equipo, credenciales y solicitudes del restaurante en JSON y requiere una cuenta propietaria del restaurante. Incluye los PIN y los verificadores de contraseñas: conserva ese archivo de forma privada. Para una copia completa del equipo, detén el servidor y copia las carpetas `data` y `public/uploads` junto con el proyecto. Los archivos multimedia no se incluyen en el JSON. La restauración sustituye los registros del restaurante, conserva al menos un propietario activo y exige volver a iniciar sesión en el restaurante. La identidad, contraseña, permisos y sesiones SaaS permanecen separados y no se transfieren ni sustituyen mediante el respaldo JSON.
 
@@ -86,7 +86,7 @@ Los platos y fotografías iniciales son demostrativos: reemplázalos por la cart
 
 ## Alcance de la recreación
 
-La investigación y sus capturas se conservan en `investigacion/CHAMAII-investigacion.md`. El diseño sigue las pantallas observadas y adapta idioma y marca según el pedido. No se certifica igualdad exacta de píxeles en toda la plataforma; algunas funciones del plan no pudieron inspeccionarse.
+La investigación y sus capturas se conservan en `investigacion/ATENCION-investigacion.md`. El diseño sigue las pantallas observadas y adapta idioma y marca según el pedido. No se certifica igualdad exacta de píxeles en toda la plataforma; algunas funciones del plan no pudieron inspeccionarse.
 
 La pantalla de suscripción documenta la referencia original; la versión local tiene las funciones habilitadas y no realiza cobros. Pedir la cuenta envía un aviso y no procesa pagos. Las notificaciones son del navegador mientras el monitor está abierto; no se implementa un servicio externo de push con la aplicación cerrada.
 
