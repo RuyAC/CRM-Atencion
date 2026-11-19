@@ -39,7 +39,7 @@ function client(url) {
     action: (action, payload = {}, headers = {}) => send('/api/action', {
       method: 'POST', headers: { 'Content-Type': 'application/json', ...headers }, body: JSON.stringify({ action, payload }),
     }),
-    async login(email = 'ventas@matebar.com', password = 'DemoOwner-ChangeMe!') {
+    async login(email = 'ventas@matebar.com', password = 'Chamaii2026!') {
       const result = await this.action('auth.login', { email, password }); assert.equal(result.status, 200); return result;
     },
   };
@@ -109,9 +109,9 @@ test('network diagnostics require an administrator and ignore forged forwarded h
   t.mock.method(os, 'networkInterfaces', () => physicalInterfaces);
   const f = await fixture(t), owner = client(f.url), stranger = client(f.url), staff = client(f.url), pin = client(f.url);
   assert.equal((await stranger.get('/api/network')).status, 401);
-  await staff.login('garcom@local.test', 'DemoStaff-ChangeMe!');
+  await staff.login('garcom@local.test', 'Garcom2026!');
   assert.equal((await staff.get('/api/network')).status, 403);
-  assert.equal((await pin.action('auth.pin', { pin: '8041' })).status, 200);
+  assert.equal((await pin.action('auth.pin', { pin: '1234' })).status, 200);
   assert.equal((await pin.get('/api/network')).status, 401);
   await owner.login();
   const result = await owner.get('/api/network', { 'X-Forwarded-For': '203.0.113.99', 'X-Real-IP': '203.0.113.99', Forwarded: 'for=203.0.113.99' });

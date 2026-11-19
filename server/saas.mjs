@@ -1,9 +1,10 @@
 import { randomUUID } from 'node:crypto';
 import { periodStart } from './reporting.mjs';
+import { hashSecret } from './security.mjs';
 
 // Platform identities and authority are installation metadata. Neither belongs
 // to restaurant staff or restaurant backups.
-export function createSaas({ db, all, one, requests, restaurant, settings, getMeta, setMeta, transaction, fail, now }) {
+export function createSaas({ bootstrap = null, db, all, one, requests, restaurant, settings, getMeta, setMeta, transaction, fail, now }) {
   db.exec(`
     CREATE TABLE IF NOT EXISTS platform_admins (
       id TEXT PRIMARY KEY, name TEXT NOT NULL, email TEXT NOT NULL UNIQUE,
@@ -30,7 +31,7 @@ export function createSaas({ db, all, one, requests, restaurant, settings, getMe
         'El correo de administración SaaS ya pertenece a otro miembro del restaurante.', 409);
       const platformId = 'platform-admin-local';
       db.prepare('INSERT OR IGNORE INTO platform_admins(id,name,email,password_hash,active) VALUES (?,?,?,?,?)')
-        .run(platformId, 'Administrador de Atencion', 'admin@local.test', credential.password_hash, principal.active !== false ? 1 : 0);
+        .run(platformId, 'Administrador de AUnToque', 'admin@local.test', bootstrap ? hashSecret(bootstrap.adminPassword) : credential.password_hash, principal.active !== false ? 1 : 0);
       // A previously revoked grant stays revoked. Restarting or restoring a
       // restaurant backup must never bootstrap platform access again.
       if (principal.active !== false && (firstSaasInstall || wasGranted)) {
@@ -55,6 +56,7 @@ export function createSaas({ db, all, one, requests, restaurant, settings, getMe
     setMeta('saas_identity_v2', true);
   });
 
+  db.prepare('UPDATE platform_admins SET name=? WHERE name=?').run('Administrador de AUnToque','Administrador de Atencion');
   const platformById = id => db.prepare('SELECT * FROM platform_admins WHERE id=?').get(id);
   const platformByEmail = email => db.prepare('SELECT * FROM platform_admins WHERE lower(email)=?').get(email.toLowerCase());
   const platformUser = row => row ? ({ id: row.id, name: row.name, email: row.email, role: 'PLATFORM_ADMIN', active: Boolean(row.active) }) : null;

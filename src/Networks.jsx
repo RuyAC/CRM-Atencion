@@ -47,3 +47,5 @@ export default function Networks({data,execute,busy}){
  {remove?<Modal className="n-modal" title="Eliminar red" description={`La red “${remove.name}” dejará de estar autorizada.`} onClose={()=>{if(!mutationRef.current)setRemove(null);}}><div className="n-form"><ErrorMessage>{removeError}</ErrorMessage><div className="n-form-actions"><Button disabled={locked} onClick={()=>setRemove(null)}>Cancelar</Button><Button kind="n-danger" disabled={locked} onClick={deleteNetwork}>{pending==='remove'?'Eliminando…':'Eliminar red'}</Button></div></div></Modal>:null}
  </div>;
 }
+
+

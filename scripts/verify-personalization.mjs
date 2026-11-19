@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import {createApp} from '../server/index.mjs';
 
 const require = createRequire(import.meta.url);
-const {chromium} = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const {chromium} = require(process.env.PLAYWRIGHT_MODULE || 'C:/Users/ruyal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const out = path.join(root, '.impeccable/review/personalization');
 const hashes = ['identidad','mensaje-mesa','tv-settings','seguridad','geofence','menu','horarios','cuenta-seguridad'];
@@ -43,7 +43,7 @@ async function login() {
   await admin.goto(base+'/dashboard');
   if (await admin.getByRole('button',{name:'Entrar a mi cuenta',exact:true}).count()) {
     await admin.getByLabel('Correo electrónico',{exact:true}).fill('ventas@matebar.com');
-    await admin.getByLabel('Contraseña',{exact:true}).fill('DemoOwner-ChangeMe!');
+    await admin.getByLabel('Contraseña',{exact:true}).fill('Chamaii2026!');
     await admin.getByRole('button',{name:'Entrar a mi cuenta',exact:true}).click();
   }
   await admin.getByRole('heading',{name:'Panel principal',exact:true}).waitFor({timeout:10000});

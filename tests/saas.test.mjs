@@ -23,7 +23,7 @@ function client(url, initialCookie = '') {
   return {
     get: (route = '/api/state') => send(route),
     action: (action, payload = {}, headers = {}) => send('/api/action', { method: 'POST', headers: { 'Content-Type': 'application/json', ...headers }, body: JSON.stringify({ action, payload }) }),
-    async login(email = 'admin@local.test', password = 'DemoOwner-ChangeMe!') {
+    async login(email = 'admin@local.test', password = 'Chamaii2026!') {
       const result = await this.action('auth.login', { email, password }); assert.equal(result.status, 200, result.body.error); return result;
     },
     cookie: () => cookie,
@@ -39,8 +39,8 @@ test('SaaS authentication uses a separate platform principal, never a restaurant
   assert.equal((await anonymous.get('/api/saas/state')).status, 401);
   const login = await admin.login();
   assert.equal(login.body.result.role, 'PLATFORM_ADMIN'); assert.equal(login.body.result.id, principalId);
-  await sales.login('ventas@matebar.com'); await manager.login('gerente@local.test', 'DemoManager-ChangeMe!'); await staff.login('garcom@local.test', 'DemoStaff-ChangeMe!');
-  assert.equal((await pin.action('auth.pin', { staffId: 'owner-local', pin: '8041' })).status, 200);
+  await sales.login('ventas@matebar.com'); await manager.login('gerente@local.test', 'Gerente2026!'); await staff.login('garcom@local.test', 'Garcom2026!');
+  assert.equal((await pin.action('auth.pin', { staffId: 'owner-local', pin: '1234' })).status, 200);
   assert.equal((await saveStaff(sales, { ...ownerInput, saasAdmin: true, grants: ['platform'] })).status, 200);
   await extraOwner.login(ownerInput.email, ownerInput.password);
   for (const [actor, status] of [[sales, 403], [manager, 403], [staff, 403], [pin, 401], [extraOwner, 403]]) {
@@ -56,7 +56,7 @@ test('SaaS authentication uses a separate platform principal, never a restaurant
   assert.equal(f.app.db.prepare("SELECT data FROM entities WHERE kind='staff' AND id=?").get(principalId), undefined);
   assert.equal((await admin.get('/api/saas/state')).status, 200);
   const platformPin = client(f.url);
-  assert.equal((await platformPin.action('auth.pin', { staffId: principalId, pin: '8041' })).status, 401);
+  assert.equal((await platformPin.action('auth.pin', { staffId: principalId, pin: '1234' })).status, 401);
   f.app.db.prepare('UPDATE platform_admins SET active=0 WHERE id=?').run(principalId);
   assert.equal((await admin.get('/api/saas/state')).status, 401);
   assert.equal((await admin.get()).body.viewer.saasAdmin, false);
@@ -115,12 +115,12 @@ test('password changes and staff administration cannot cross the platform identi
   }
   for (const id of ['owner-local', 'new-user']) assert.equal((await saveStaff(sales, { ...ownerInput, id, email: 'ADMIN@LOCAL.TEST' })).status, 409);
   assert.equal((await sales.action('staff.pinReveal', { id: principalId })).status, 403);
-  assert.equal((await sales.action('staff.pinReveal', { id: 'owner-local' })).body.result.pin, '8041');
-  assert.equal((await admin.action('auth.password', { current: 'DemoOwner-ChangeMe!', newPassword: 'Platform2026!' })).status, 200);
+  assert.equal((await sales.action('staff.pinReveal', { id: 'owner-local' })).body.result.pin, '1234');
+  assert.equal((await admin.action('auth.password', { current: 'Chamaii2026!', newPassword: 'Platform2026!' })).status, 200);
   const another = client(f.url);
-  assert.equal((await another.action('auth.login', { email: 'admin@local.test', password: 'DemoOwner-ChangeMe!' })).status, 401);
+  assert.equal((await another.action('auth.login', { email: 'admin@local.test', password: 'Chamaii2026!' })).status, 401);
   await another.login('admin@local.test', 'Platform2026!');
-  assert.equal((await sales.action('auth.password', { current: 'DemoOwner-ChangeMe!', newPassword: 'Restaurant2026!' })).status, 200);
+  assert.equal((await sales.action('auth.password', { current: 'Chamaii2026!', newPassword: 'Restaurant2026!' })).status, 200);
   await another.login('admin@local.test', 'Platform2026!');
   await sales.login('ventas@matebar.com', 'Restaurant2026!');
   assert.equal((await saveStaff(sales, { id: 'owner-local', role: 'MANAGER' })).status, 400);
@@ -168,7 +168,7 @@ test('legacy restaurant backup email migrates without altering platform password
   backup.restaurant.contactEmail = 'admin@local.test';
   assert.equal((await sales.action('backup.restore', { backup })).status, 200);
   await sales.login('ventas@matebar.com', 'LegacyRestaurant2026!');
-  await admin.login('admin@local.test', 'DemoOwner-ChangeMe!');
+  await admin.login('admin@local.test', 'Chamaii2026!');
   assert.equal((await sales.get()).body.restaurant.contactEmail, 'ventas@matebar.com');
   assert.equal((await admin.get('/api/saas/state')).body.accounts[0].email, 'ventas@matebar.com');
 });
@@ -211,7 +211,7 @@ test('identity migration preserves data and secrets, invalidates old cookies and
   const event = state.activity.find(item => item.id === 'legacy-login');
   assert.equal(event.actorEmail, 'admin@local.test'); assert.equal(event.createdAt, '2026-10-06T12:00:00.000Z'); assert.equal(event.type, 'account.login.legacy');
   assert.equal(event.label, 'Acceso anterior a la separación de cuentas');
-  await sales.login('ventas@matebar.com', 'OriginalOwner2026!'); assert.equal((await pin.action('auth.pin', { staffId: 'owner-local', pin: '8041' })).status, 200);
+  await sales.login('ventas@matebar.com', 'OriginalOwner2026!'); assert.equal((await pin.action('auth.pin', { staffId: 'owner-local', pin: '1234' })).status, 200);
   const cookie = admin.cookie(); state = (await admin.get('/api/saas/state')).body;
   await f.close(); f = await fixture(dbPath);
   const resumed = client(f.url, cookie);
@@ -253,8 +253,8 @@ test('disabled legacy principal cannot be reactivated by identity migration', as
 test('history records successful restaurant owner logins only and retains the latest 100 events', async t => {
   const f = await fixture(); t.after(() => f.close()); const admin = client(f.url), sales = client(f.url), manager = client(f.url), staff = client(f.url), pin = client(f.url);
   assert.equal((await admin.action('auth.login', { email: 'admin@local.test', password: 'wrong' })).status, 401);
-  await admin.login(); await manager.login('gerente@local.test', 'DemoManager-ChangeMe!'); await staff.login('garcom@local.test', 'DemoStaff-ChangeMe!');
-  assert.equal((await pin.action('auth.pin', { staffId: 'owner-local', pin: '8041' })).status, 200);
+  await admin.login(); await manager.login('gerente@local.test', 'Gerente2026!'); await staff.login('garcom@local.test', 'Garcom2026!');
+  assert.equal((await pin.action('auth.pin', { staffId: 'owner-local', pin: '1234' })).status, 200);
   assert.equal(f.app.db.prepare('SELECT COUNT(*) AS total FROM saas_activity').get().total, 0);
   const insert = f.app.db.prepare('INSERT INTO saas_activity(id,type,actor_id,actor_name,actor_email,created_at,restaurant_name) VALUES (?,?,?,?,?,?,?)');
   for (let index = 0; index < 110; index++) insert.run(`older-${index}`, 'account.login', 'owner-local', 'Mate bar', 'ventas@matebar.com', new Date(1700000000000 + index * 1000).toISOString(), 'Mate bar');

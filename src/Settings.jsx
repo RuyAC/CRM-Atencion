@@ -67,18 +67,32 @@ export default function Settings({data,execute,busy}) {
   const [dirty,setDirty]=useState(false),[password,setPassword]=useState({current:'',newPassword:'',confirm:''}),[reveal,setReveal]=useState({}),[passwordError,setPasswordError]=useState('');
   const [address,setAddress]=useState(''),[addressResults,setAddressResults]=useState([]),[locating,setLocating]=useState(false),[locationError,setLocationError]=useState('');
   const [hash,setHash]=useState(window.location.hash||'#identidad'),[savedTvPin,setSavedTvPin]=useState('');
+  const revision=useRef(data.settingsRevision);
+  const [conflict,setConflict]=useState('');
   const setS=(key,value)=>{setSettings(s=>({...s,[key]:value}));setDirty(true);};
   const setR=(key,value)=>{setRestaurant(r=>({...r,[key]:value}));if(key==='currency')setSettings(s=>({...s,currency:value}));setDirty(true);};
   const hours=settings.hours?.length===7?settings.hours:defaultHours;
   const validColor=/^#[a-f0-9]{6}$/i.test(restaurant.primaryColor||'');
   useEffect(()=>{const update=()=>setHash(window.location.hash||'#identidad');window.addEventListener('hashchange',update);const initial=document.getElementById(window.location.hash.slice(1));if(initial)requestAnimationFrame(()=>initial.scrollIntoView());return()=>window.removeEventListener('hashchange',update);},[]);
   useEffect(()=>{let active=true;act('staff.pinReveal',{id:'tv-general'}).then(({pin})=>{if(active){setSavedTvPin(pin||'');setSettings(s=>({...s,tvPin:s.tvPin||pin||''}));}}).catch(()=>{});return()=>{active=false;};},[]);
-  async function save(event){event?.preventDefault();try{await execute('settings.save',{settings:{...settings,tvPin:settings.tvPin!==savedTvPin?settings.tvPin:''},restaurant},'Configuración guardada.');setSavedTvPin(settings.tvPin||savedTvPin);setDirty(false);}catch{}}
+  useEffect(()=>{
+    if(!dirty){setSettings({...data.settings,tvPin:savedTvPin});setRestaurant({...data.restaurant});revision.current=data.settingsRevision;}
+  },[data.settingsRevision,dirty,savedTvPin]);
+  useEffect(()=>{
+    if(!dirty)return;
+    const warn=event=>{event.preventDefault();event.returnValue='';};
+    const navigate=event=>{const link=event.target.closest?.('a[href]');if(!link||link.target==='_blank'||link.hasAttribute('download'))return;const target=new URL(link.href,location.href);if(target.pathname===location.pathname&&target.search===location.search)return;if(!window.confirm('Hay cambios sin guardar. ¿Quieres descartarlos y salir?')){event.preventDefault();event.stopPropagation();}};
+    window.addEventListener('beforeunload',warn);document.addEventListener('click',navigate,true);
+    return()=>{window.removeEventListener('beforeunload',warn);document.removeEventListener('click',navigate,true);};
+  },[dirty]);
+  async function save(event){event?.preventDefault();setConflict('');try{const saved=await execute('settings.save',{expectedRevision:revision.current,settings:{...settings,tvPin:settings.tvPin!==savedTvPin?settings.tvPin:''},restaurant},'Configuración guardada.');revision.current=saved.settingsRevision;setSavedTvPin(settings.tvPin||savedTvPin);setDirty(false);}catch(error){if(error.status===409||error.code==='SETTINGS_CONFLICT')setConflict('La configuración cambió en otra sesión. Recarga los valores actuales antes de volver a guardar.');}}
+  function reloadSettings(){if(dirty&&!window.confirm('¿Descartar tus cambios y cargar la configuración actual?'))return;setSettings({...data.settings,tvPin:savedTvPin});setRestaurant({...data.restaurant});revision.current=data.settingsRevision;setDirty(false);setConflict('');}
   async function useLocation(){setLocationError('');if(!navigator.geolocation){setLocationError('Este navegador no admite ubicación. Ingresa las coordenadas manualmente.');return;}setLocating(true);navigator.geolocation.getCurrentPosition(p=>{setS('latitude',p.coords.latitude.toFixed(7));setS('longitude',p.coords.longitude.toFixed(7));setLocating(false);},e=>{setLocationError(e.message||'No se pudo obtener la ubicación.');setLocating(false);},{enableHighAccuracy:true,timeout:15000});}
   async function findAddress(){if(!address.trim())return;setLocating(true);setLocationError('');try{const response=await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=4&q=${encodeURIComponent(address)}`);if(!response.ok)throw new Error('No se pudo buscar la dirección. Ingresa coordenadas manualmente.');const results=await response.json();setAddressResults(results);if(!results.length)setLocationError('No se encontraron direcciones. Prueba con ciudad y calle.');}catch(e){setLocationError(e.message);}finally{setLocating(false);}}
   function generatePassword(){const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$';const random=crypto.getRandomValues(new Uint8Array(18));const value=Array.from(random,n=>alphabet[n%alphabet.length]).join('');setPassword(p=>({...p,newPassword:value,confirm:value}));setReveal(r=>({...r,newPassword:true}));}
   return <div className="s-page">
     <div className="a-page-heading s-heading"><div><h1>Configuración del establecimiento</h1><p>Personaliza la identidad visual, la seguridad, las reglas de Wi-Fi y los horarios de funcionamiento.</p></div><div className="a-heading-actions"><Button primary icon="save" disabled={busy||!validColor} onClick={save}>{busy?'Guardando…':'Guardar cambios'}</Button></div></div>
+    {conflict?<div role="alert" className="s-error">{conflict}<Button onClick={reloadSettings}>Cargar configuración actual</Button></div>:null}
     <nav className="s-section-nav" aria-label="Secciones de configuración">{sections.map(([id,label,icon])=><a href={`#${id}`} key={id} className={hash===`#${id}`?'active':''}><Icon name={icon} size={15}/>{label}</a>)}</nav>
     <form onSubmit={save} className="s-settings-form">
       <Section id="identidad" title="Identidad visual, portada y logotipo" icon="palette">

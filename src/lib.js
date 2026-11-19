@@ -4,7 +4,7 @@ const changes = new EventTarget();
 let currency='BOB';
 const pathRestaurant = () => {const parts=location.pathname.split('/');return ['r','tv'].includes(parts[1])?decodeURIComponent(parts[2]||''):'';};
 export async function api(path,options={}) {
-  const response=await fetch(path,{credentials:'include',...options,headers:{'Content-Type':'application/json',...options.headers}});
+  const response=await fetch(path,{credentials:'include',...options,signal:options.signal||AbortSignal.timeout(20000),headers:{'Content-Type':'application/json',...options.headers}});
   const value=await response.json().catch(()=>({message:'El servidor no pudo responder.'}));
   if(!response.ok){const error=new Error(value.message||value.error||'No se pudo completar la acción.');error.code=value.code;error.status=response.status;throw error;}
   return value;
@@ -35,15 +35,21 @@ export function useStore(options={}) {
   },[]);
   useEffect(()=>{
     alive.current=true;setLoading(true);refresh();
-    const stream=new EventSource(streamUrl,{withCredentials:true});
+    let stream;
+    const connect=()=>{
+    stream?.close();
+    stream=new EventSource(streamUrl,{withCredentials:true});
     stream.onopen=()=>{setConnected(true);refresh();};
     stream.onmessage=()=>{setConnected(true);refresh();};
     stream.addEventListener('state',()=>refresh());stream.addEventListener('change',()=>refresh());stream.addEventListener('update',()=>refresh());
     stream.onerror=()=>setConnected(false);
+    };
+    connect();
     const handle=()=>refresh();changes.addEventListener('change',handle);
     const visible=()=>{if(document.visibilityState==='visible')refresh();};document.addEventListener('visibilitychange',visible);
+    const online=()=>{connect();refresh();},offline=()=>{stream.close();setConnected(false);};window.addEventListener('online',online);window.addEventListener('offline',offline);
     const fallback=setInterval(refresh,30000);
-    return()=>{alive.current=false;stream.close();changes.removeEventListener('change',handle);document.removeEventListener('visibilitychange',visible);clearInterval(fallback);};
+    return()=>{alive.current=false;stream.close();changes.removeEventListener('change',handle);document.removeEventListener('visibilitychange',visible);window.removeEventListener('online',online);window.removeEventListener('offline',offline);clearInterval(fallback);};
   },[url,streamUrl,refresh,token]);
   return {data,loading,connected,error,refresh};
 }

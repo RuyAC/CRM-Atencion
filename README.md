@@ -1,20 +1,18 @@
-# Atencion · Atención y menú digital para Mate bar
-> Repositorio de la versión local. Las credenciales incluidas son ejemplos públicos para nuevas instalaciones: cámbialas antes de permitir acceso externo. No contiene datos, sesiones, archivos subidos ni contraseñas de la instalación privada. Publicar este código en GitHub no despliega el servidor.
+# AUnToque · SaaS para restaurantes
 
-## Instalación desde GitHub
+Guía vigente de despliegue y operación: [docs/PRODUCCION.md](docs/PRODUCCION.md). Resultados y límites de la verificación: [docs/VERIFICACION-LANZAMIENTO.md](docs/VERIFICACION-LANZAMIENTO.md). Las instrucciones siguientes describen el entorno local de demostración; sus contraseñas no deben usarse en producción.
 
-Requiere Node.js 24 LTS o superior. Ejecuta `npm ci`, luego `npm run build` y `npm start`. Abre http://localhost:3001. SQLite y los archivos subidos necesitan almacenamiento persistente si alojas el servidor en otro equipo. GitHub Pages no ejecuta este servidor Node.js.
-
+# AUnToque · Atención y menú digital para Mate bar
 
 Versión local en español, con precios en bolivianos (Bs). Recrea el circuito observado de Chamaii: QR por mesa, llamada al garzón, solicitud de cuenta, menú con fotos y videos y pantallas de atención en vivo.
 
 ## Abrir la aplicación
 
-Abre **Iniciar Atencion.cmd** con doble clic. Mantén la ventana abierta durante el servicio. El equipo necesita Node.js 24 LTS o superior; instala las dependencias con `npm ci`; el iniciador prepara la aplicación si hace falta. El inicio conserva los datos y reconoce si el servidor ya está abierto.
+Abre **Iniciar AUnToque.cmd** con doble clic. Mantén la ventana abierta durante el servicio. El equipo necesita Node.js 24 LTS o superior; las dependencias y la aplicación preparada ya están incluidas en este espacio de trabajo. El inicio conserva los datos y reconoce si el servidor ya está abierto.
 
 - Administrador: http://localhost:3001/dashboard
 - Crear cuenta de restaurante: http://localhost:3001/register
-- Administración de Atencion: http://localhost:3001/saas
+- Administración de AUnToque: http://localhost:3001/saas
 - Cliente, Mesa 01: http://localhost:3001/r/mate-bar/t/table-01
 - Monitor: http://localhost:3001/tv/mate-bar
 - Vista compacta para reloj: http://localhost:3001/tv/mate-bar/watch
@@ -23,16 +21,16 @@ Los enlaces de mesa anteriores corresponden a la configuración inicial. Despué
 
 ## Accesos iniciales
 
-Los accesos están separados: `ventas@matebar.com` administra Mate bar en `/dashboard`; `admin@local.test` administra únicamente Atencion en `/saas`. La cuenta SaaS no pertenece al equipo, no aparece como cliente y no permite operar el restaurante ni usar un PIN. Para cambiar de cuenta, abre **Entrar al restaurante** y usa sus credenciales. El panel SaaS incluye Resumen, Cuentas, Restaurantes y Actividad, con datos reales de todos los restaurantes registrados localmente. Los cobros siguen pendientes. El modelo comercial futuro será una suscripción mensual por restaurante; las siguientes etapas están en `SaaS-PROPUESTA.md`.
+Los accesos están separados: `ventas@matebar.com` administra Mate bar en `/dashboard`; `admin@local.test` administra únicamente AUnToque en `/saas`. La cuenta SaaS no pertenece al equipo, no aparece como cliente y no permite operar el restaurante ni usar un PIN. Para cambiar de cuenta, abre **Entrar al restaurante** y usa sus credenciales. El panel SaaS incluye Resumen, Cuentas, Restaurantes y Actividad, con datos reales de todos los restaurantes registrados localmente. Las suscripciones mensuales y anuales se activan manualmente desde Restaurantes, con vencimiento y límites por plan. Los pagos se reciben fuera de la aplicación.
 
 | Perfil | Correo | Contraseña | PIN |
 |---|---|---|---|
-| Cliente propietario de Mate bar | ventas@matebar.com | DemoOwner-ChangeMe! | 8041 |
-| Administrador de Atencion | admin@local.test | DemoOwner-ChangeMe! | Sin PIN |
-| Gerente | gerente@local.test | DemoManager-ChangeMe! | 8042 |
-| Garzón | garcom@local.test | DemoStaff-ChangeMe! | 8043 |
+| Cliente propietario de Mate bar | ventas@matebar.com | Chamaii2026! | 1234 |
+| Administrador de AUnToque | admin@local.test | Chamaii2026! | Sin PIN |
+| Gerente | gerente@local.test | Gerente2026! | 2345 |
+| Garzón | garcom@local.test | Garcom2026! | 3456 |
 
-PIN general del monitor: **8041**. El PIN permite operar el monitor; para administrar se entra con correo y contraseña. Puedes cambiar contraseñas en **Configuración → Seguridad** y credenciales del equipo en **Equipo**. Son accesos de demostración para esta instalación.
+PIN general del monitor: **1234**. El PIN permite operar el monitor; para administrar se entra con correo y contraseña. Puedes cambiar contraseñas en **Configuración → Seguridad** y credenciales del equipo en **Equipo**. Son accesos de demostración para esta instalación.
 
 La separación conserva la contraseña y el PIN que ya tenía Mate bar; si cambiaste su contraseña, sigue vigente y también se conservó como contraseña inicial del acceso SaaS separado. Cambiar la contraseña del restaurante después de la separación no modifica la cuenta SaaS. Las sesiones antiguas del propietario se cierran una vez para que vuelvas a entrar con el correo correspondiente.
 
@@ -46,7 +44,7 @@ El registro funciona en esta instalación local y en los dispositivos que alcanz
 
 ## Usar teléfonos, tablet o televisor
 
-1. Conecta los dispositivos a la misma red del equipo que ejecuta Atencion.
+1. Conecta los dispositivos a la misma red del equipo que ejecuta AUnToque.
 2. En **Mesas → Dirección para los teléfonos**, elige la dirección de red detectada, por ejemplo `http://192.168.1.10:3001`, y guarda.
 3. Abre primero esa dirección en un teléfono para comprobar que alcanza el equipo. Si no abre, revisa la red, el aislamiento de clientes del router y el permiso de acceso de Node.js en el firewall de Windows.
 4. Descarga o imprime los QR. Ya apuntarán a esa dirección.

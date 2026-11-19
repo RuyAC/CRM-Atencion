@@ -32,7 +32,7 @@ function ClientDialog({children, onClose, className = '', label}) {
 }
 
 function Price({product, story = false}) {
-  const promoted = product.promoPrice != null && product.promoPrice > 0 && product.promoPrice < product.price;
+  const promoted = product.promoPrice != null && product.promoPrice >= 0 && product.promoPrice < product.price;
   return <span className={`client-price ${story ? 'story-price' : ''}`}>
     {promoted && !story ? <del>{money(product.price)}</del> : null}
     <strong>{money(promoted ? product.promoPrice : product.price)}</strong>
@@ -229,3 +229,4 @@ export default function Client() {
     {billDialog ? <ClientDialog label="Cuenta solicitada" onClose={() => setBillDialog(false)} className="client-bill-dialog"><span className="client-success-icon"><Icon name="circle-check" size={36}/></span><h2>¡Cuenta solicitada!</h2><p>Nuestro equipo ya fue avisado y llevará la cuenta a tu mesa.</p><button className="client-confirm" onClick={() => setBillDialog(false)}>Perfecto</button><button className="client-dialog-cancel" disabled={busy} onClick={cancel}>Cancelar</button></ClientDialog> : null}
   </main>;
 }
+

@@ -24,7 +24,7 @@ function client(url) {
   return {
     state: () => send('/api/state'),
     action: (action, payload = {}) => send('/api/action', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action, payload }) }),
-    async login(email = 'ventas@matebar.com', password = 'DemoOwner-ChangeMe!') {
+    async login(email = 'ventas@matebar.com', password = 'Chamaii2026!') {
       const result = await this.action('auth.login', { email, password });
       assert.equal(result.status, 200, result.body.error); return result;
     },
@@ -91,7 +91,7 @@ test('changing only a password rejects old credentials, preserves the PIN and re
 
 test('only an owner may promote staff; role changes revoke sessions but preserve both credentials', async t => {
   const url = await fixture(t), owner = client(url), manager = client(url), member = client(url), monitor = client(url);
-  await owner.login(); await manager.login('gerente@local.test', 'DemoManager-ChangeMe!');
+  await owner.login(); await manager.login('gerente@local.test', 'Gerente2026!');
   const id = (await save(owner, newMember())).body.result.id;
   await member.login('ana@example.test', 'Abc123');
   assert.equal((await monitor.action('auth.pin', { staffId: id, pin: '0876' })).status, 200);
@@ -131,7 +131,7 @@ test('deleting a member removes login and PIN credentials and immediately revoke
 
 test('the separate self-service password policy and general TV PIN policy remain unchanged', async t => {
   const url = await fixture(t), owner = client(url); await owner.login();
-  assert.equal((await owner.action('auth.password', { current: 'DemoOwner-ChangeMe!', newPassword: 'Abc123' })).status, 400);
+  assert.equal((await owner.action('auth.password', { current: 'Chamaii2026!', newPassword: 'Abc123' })).status, 400);
   assert.equal((await owner.action('settings.save', { settings: { tvPin: '12345678' } })).status, 200);
   assert.equal((await owner.action('staff.pinReveal', { id: 'tv-general' })).body.result.pin, '12345678');
 });

@@ -1,0 +1,10 @@
+import {checkEnvironment} from './preflight.mjs';
+import {commercialConfig} from '../server/commercial.mjs';
+const config=commercialConfig(),errors=checkEnvironment();
+if(process.env.REQUIRE_PLATFORM_MFA!=='true')errors.push('REQUIRE_PLATFORM_MFA=true y autenticador configurado para la administración SaaS');
+if(!config.legalPublished)errors.push('Completar identidad, domicilio, jurisdicción, soporte, cancelaciones, privacidad y LEGAL_VERSION; revisar documentos y habilitar LEGAL_PUBLISHED=true');
+if(!config.salesEmail&&!config.whatsapp)errors.push('Configurar correo de ventas o WhatsApp comercial');
+if(!config.paymentInstructions)errors.push('Configurar PAYMENT_INSTRUCTIONS con el canal de pago acordado');
+if(!process.env.ALERT_WEBHOOK?.startsWith('https://'))errors.push('Configurar ALERT_WEBHOOK HTTPS y verificar recepción de alertas');
+if(!process.env.OFFSITE_STATUS_FILE)errors.push('Configurar y verificar el respaldo externo y OFFSITE_STATUS_FILE');
+if(errors.length){console.error('Pendientes para comercialización:\n'+errors.map(e=>'- '+e).join('\n'));process.exitCode=1;}else console.log('Configuración comercial completa. Todavía debes validar el servidor, restauración externa, correos y piloto real.');

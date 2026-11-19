@@ -1,0 +1,80 @@
+services:
+  app:
+    image: auntoque:${RELEASE_TAG:-local}
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    restart: unless-stopped
+    init: true
+    env_file: .env
+    environment:
+      TRUSTED_PROXY_IPS: 172.30.0.2
+    volumes:
+      - app_data:/var/lib/auntoque
+      - backups:/var/backups/auntoque
+    networks:
+      backend:
+        ipv4_address: 172.30.0.3
+    mem_limit: 1g
+    logging:
+      options:
+        max-size: 10m
+        max-file: '3'
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      backend:
+        ipv4_address: 172.30.0.2
+  offsite:
+    image: restic/restic:0.17.3
+    profiles: [offsite]
+    restart: unless-stopped
+    env_file: .env.offsite
+    entrypoint: /bin/sh
+    command: /scripts/offsite.sh
+    volumes:
+      - ./offsite.sh:/scripts/offsite.sh:ro
+      - backups:/source:ro
+      - restic_cache:/root/.cache/restic
+      - offsite_status:/status
+  monitor:
+    image: auntoque:${RELEASE_TAG:-local}
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    profiles: [monitoring]
+    restart: unless-stopped
+    env_file: .env
+    command: [node, scripts/monitor.mjs, --loop]
+    healthcheck:
+      disable: true
+    read_only: true
+    volumes:
+      - app_data:/var/lib/auntoque:ro
+      - backups:/var/backups/auntoque:ro
+      - offsite_status:/status:ro
+    logging:
+      options:
+        max-size: 10m
+        max-file: '3'
+networks:
+  backend:
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24
+volumes:
+  app_data:
+  backups:
+  caddy_data:
+  caddy_config:
+  restic_cache:
+  offsite_status:

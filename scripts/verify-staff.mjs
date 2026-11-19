@@ -8,7 +8,7 @@ import {createApp} from '../server/index.mjs';
 // This development check uses only an isolated in-memory database and temporary uploads.
 // It never navigates to the reference service or changes the primary local database.
 const require=createRequire(import.meta.url);
-const {chromium,request}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
+const {chromium,request}=require(process.env.PLAYWRIGHT_MODULE||'C:/Users/ruyal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const mediaDir=await mkdtemp(path.join(os.tmpdir(),'mate-staff-ui-'));
 const app=createApp({dbPath:':memory:',mediaDir,host:'127.0.0.1',port:0});
 const address=await app.listen(),base=`http://127.0.0.1:${address.port}`;
@@ -43,7 +43,7 @@ async function screenshots(){
 }
 let testMember,memberActor,monitorActor;
 try{
-  await page.goto(base+'/dashboard');await page.getByLabel('Correo electrónico',{exact:true}).fill('ventas@matebar.com');await page.getByLabel('Contraseña',{exact:true}).fill('DemoOwner-ChangeMe!');await page.getByRole('button',{name:'Entrar a mi cuenta',exact:true}).click();await page.getByRole('heading',{name:'Panel principal',exact:true}).waitFor();
+  await page.goto(base+'/dashboard');await page.getByLabel('Correo electrónico',{exact:true}).fill('ventas@matebar.com');await page.getByLabel('Contraseña',{exact:true}).fill('Chamaii2026!');await page.getByRole('button',{name:'Entrar a mi cuenta',exact:true}).click();await page.getByRole('heading',{name:'Panel principal',exact:true}).waitFor();
   for(const id of ['manager-local','staff-local'])assert.equal((await action(context.request,'entity.delete',{entity:'staff',id})).status,200);
   assert.equal((await action(context.request,'entity.save',{entity:'staff',item:{id:'owner-local',name:'Administrador Mate bar'}})).status,200);
   if(!process.env.STAFF_SKIP_SCREENSHOTS){await screenshots();await writeFile(out+'/geometry.json',JSON.stringify(geometry,null,2));

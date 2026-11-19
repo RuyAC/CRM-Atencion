@@ -4,9 +4,10 @@ import path from 'node:path';
 import os from 'node:os';
 import assert from 'node:assert/strict';
 import {createApp} from '../server/index.mjs';
+import {validVideo} from '../server/media-validation.mjs';
 
 const require=createRequire(import.meta.url);
-const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'C:/Users/ruyal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const out=path.resolve('.impeccable/review/product-editor');
 const temporary=await mkdtemp(path.join(os.tmpdir(),'atencion-product-editor-'));
 await mkdir(out,{recursive:true});
@@ -35,7 +36,7 @@ try{
   ctx=await browser.newContext({viewport:{width:1119,height:841},reducedMotion:'reduce',serviceWorkers:'block'});
   await ctx.route('**/*',route=>new URL(route.request().url()).origin===base?route.continue():route.abort('blockedbyclient'));
   page=await ctx.newPage();page.setDefaultTimeout(10000);page.on('pageerror',error=>errors.push(error.message));
-  await action('auth.login',{email:'ventas@matebar.com',password:'DemoOwner-ChangeMe!'});
+  await action('auth.login',{email:'ventas@matebar.com',password:'Chamaii2026!'});
   const initial=await state(),product=initial.products.find(item=>item.id==='produto-2')||initial.products[0];
   await action('entity.save',{entity:'products',item:{...product,name:'PRUEBA',price:2500,promoPrice:2000,description:'Plato de prueba funcional. No disponible para consumo.',tags:['Vegetariano'],featured:false,available:false,videoUrl:''}});
   await page.goto(base+'/dashboard/menu');await page.getByRole('heading',{name:'Menú digital',exact:true}).waitFor();
@@ -88,7 +89,11 @@ try{
       const ended=new Promise(resolve=>{recorder.ondataavailable=event=>chunks.push(event.data);recorder.onstop=resolve;});recorder.start();for(let frame=0;frame<5;frame++){paint.fillStyle=frame%2?'#f50046':'#d5003d';paint.fillRect(0,0,90,160);stream.getVideoTracks()[0].requestFrame?.();await new Promise(resolve=>setTimeout(resolve,70));}recorder.stop();await ended;stream.getTracks().forEach(track=>track.stop());
       const bytes=new Uint8Array(await new Blob(chunks,{type:'video/webm'}).arrayBuffer());let data='';for(const byte of bytes)data+=String.fromCharCode(byte);return btoa(data);
     });
-    await dialog().locator('input[type="file"]').setInputFiles({name:'test.webm',mimeType:'video/webm',buffer:Buffer.from(videoBase64,'base64')});
+    const videoBytes=Buffer.from(videoBase64,'base64');
+    assert(validVideo(videoBytes,'video/webm'),`Recorded WebM invalid: ${videoBytes.length} bytes, header ${videoBytes.subarray(0,48).toString('hex')}`);
+    const uploaded=page.waitForResponse(response=>response.url().endsWith('/api/action')&&response.request().postData()?.includes('upload.create'));
+    await dialog().locator('input[type="file"]').setInputFiles({name:'test.webm',mimeType:'video/webm',buffer:videoBytes});
+    const uploadResponse=await uploaded;assert.equal(uploadResponse.status(),200,await uploadResponse.text());
     await page.waitForFunction(()=>document.querySelector('input[aria-label="Enlace del video"]')?.value.startsWith('/uploads/'));
     await dialog().locator('video').waitFor();
   });

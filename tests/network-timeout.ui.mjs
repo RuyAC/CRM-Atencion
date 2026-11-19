@@ -7,7 +7,7 @@ import { createApp } from '../server/index.mjs';
 import { localCandidates } from '../src/network-client.js';
 
 const require = createRequire(import.meta.url);
-const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'C:/Users/ruyal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const directory = await mkdtemp(path.join(os.tmpdir(), 'mate-network-timeout-'));
 const app = createApp({ dbPath: path.join(directory, 'network.sqlite'), mediaDir: path.join(directory, 'uploads'), host: '127.0.0.1', port: 0 });
 let browser, publicMode = 'pending';
@@ -31,7 +31,7 @@ try {
   admin.on('pageerror', error => errors.push(error.message));
   await admin.goto(base + '/dashboard');
   await admin.getByLabel('Correo electrónico', { exact: true }).fill('ventas@matebar.com');
-  await admin.getByLabel('Contraseña', { exact: true }).fill('DemoOwner-ChangeMe!');
+  await admin.getByLabel('Contraseña', { exact: true }).fill('Chamaii2026!');
   await admin.getByRole('button', { name: 'Entrar a mi cuenta', exact: true }).click();
   await admin.getByRole('heading', { name: 'Panel principal', exact: true }).waitFor();
   const diagnostic = await (await context.request.get(base + '/api/network')).json();
@@ -81,3 +81,4 @@ try {
   assert(path.basename(directory).startsWith('mate-network-timeout-'));
   await rm(directory, { recursive: true, force: true });
 }
+

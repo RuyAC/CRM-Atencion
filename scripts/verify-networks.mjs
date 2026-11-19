@@ -10,7 +10,7 @@ import {localCandidates} from '../src/network-client.js';
 // Owned localhost server and disposable SQLite only. Public IP is mocked.
 // No primary data, existing browser session, or reference service is used.
 const require=createRequire(import.meta.url);
-const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'C:/Users/ruyal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const out=path.join(root,'.impeccable/review/networks-reference');
 const directory=await mkdtemp(path.join(os.tmpdir(),'mate-networks-ui-'));
@@ -59,7 +59,7 @@ try{
   await context.route('**/api/network',async route=>{if(networkMock)await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(networkMock)});else await route.continue();});
   await context.route('**/api/action',async route=>{const action=route.request().postDataJSON();if(action?.payload?.entity==='networks'){mutationCount++;if(nextMutationError){const error=nextMutationError;nextMutationError='';await route.fulfill({status:400,contentType:'application/json',body:JSON.stringify({ok:false,error})});return;}}await route.continue();});
   admin=await context.newPage();admin.setDefaultTimeout(10000);admin.on('pageerror',error=>errors.push(error.message));
-  await admin.goto(base+'/dashboard');await admin.getByLabel('Correo electrónico',{exact:true}).fill('ventas@matebar.com');await admin.getByLabel('Contraseña',{exact:true}).fill('DemoOwner-ChangeMe!');await admin.getByRole('button',{name:'Entrar a mi cuenta',exact:true}).click();await admin.getByRole('heading',{name:'Panel principal',exact:true}).waitFor();
+  await admin.goto(base+'/dashboard');await admin.getByLabel('Correo electrónico',{exact:true}).fill('ventas@matebar.com');await admin.getByLabel('Contraseña',{exact:true}).fill('Chamaii2026!');await admin.getByRole('button',{name:'Entrar a mi cuenta',exact:true}).click();await admin.getByRole('heading',{name:'Panel principal',exact:true}).waitFor();
   const diagnostic=await(await context.request.get(base+'/api/network')).json();physical=localCandidates(diagnostic)[0];assert(physical,'El servidor necesita una interfaz física privada para verificar el CIDR real.');networkMock={...diagnostic,addresses:[physical]};
   const referenceRows=[{id:'verify-reference-ipv4',name:'Localhost IPv4',ip:'127.0.0.1',active:true},{id:'verify-reference-ipv6',name:'Localhost IPv6',ip:'::1',active:true}];
   for(const item of referenceRows){const response=await context.request.post(base+'/api/action',{data:{action:'entity.save',payload:{entity:'networks',item}}});assert.equal(response.status(),200);}
@@ -93,3 +93,4 @@ try{
   await check('Circuito completo sin errores JavaScript',async()=>assert.deepEqual(errors,[]));await rm(path.join(out,'failure.png'),{force:true});
 }catch(error){await mkdir(out,{recursive:true});if(!results.some(result=>result.result==='failed'))results.push({name:'Preparación de la prueba',result:'failed',error:error.stack});if(admin&&!admin.isClosed())await admin.screenshot({path:path.join(out,'failure.png'),fullPage:true}).catch(()=>{});console.error(error.stack);process.exitCode=1;}
 finally{await writeFile(path.join(out,'results.json'),JSON.stringify({fixture:'SQLite temporal; servidor propio localhost; sin cambios en datos principales',results,errors,isolatedDatabase:true,physicalInterface:physical||null,publicIpMocks:['8.8.8.8','9.9.9.9'],pageViewports,dialogViewports,geometry,contrastReview},null,2));for(const resolve of pendingRequests)resolve();await browser?.close();await app?.close();assert.equal(path.dirname(path.resolve(directory)),path.resolve(os.tmpdir()));assert(path.basename(directory).startsWith('mate-networks-ui-'));await rm(directory,{recursive:true,force:true});}
+

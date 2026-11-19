@@ -15,3 +15,8 @@ logs/
 *.pem
 coverage/
 .DS_Store
+
+backups/
+releases/
+deploy/.env
+deploy/.env.*

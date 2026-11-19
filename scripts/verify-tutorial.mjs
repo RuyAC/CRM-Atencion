@@ -9,7 +9,7 @@ import {createApp} from '../server/index.mjs';
 // Owned localhost server, fresh browser contexts, disposable SQLite only.
 // No connection to the running installation or its restaurant data.
 const require=createRequire(import.meta.url);
-const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'C:/Users/ruyal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const out=path.join(root,'.impeccable/review/tutorial-reference');
 const temporary=await mkdtemp(path.join(os.tmpdir(),'mate-tutorial-ui-'));
@@ -33,7 +33,7 @@ async function ownedContext(options={}){
   });
   return ctx;
 }
-async function login(page,email='ventas@matebar.com',password='DemoOwner-ChangeMe!'){
+async function login(page,email='ventas@matebar.com',password='Chamaii2026!'){
   await page.goto(base+'/dashboard');
   await page.getByLabel('Correo electrónico',{exact:true}).fill(email);
   await page.getByLabel('Contraseña',{exact:true}).fill(password);
@@ -182,7 +182,7 @@ try{
     assert.equal((await action('settings.save',{restaurant:{name:original.restaurant.name}})).status,200);assert.equal((await action('entity.save',{entity:'tables',item:first})).status,200);await openPage('menu');
   });
   await check('Gerente y garzón reciben únicamente enlaces internos permitidos',async()=>{
-    for(const [role,email,password,allowed]of [['manager','gerente@local.test','DemoManager-ChangeMe!',['','tables','menu','reports','buttons','networks','kitchen']],['staff','garcom@local.test','DemoStaff-ChangeMe!',['','kitchen']]]){
+    for(const [role,email,password,allowed]of [['manager','gerente@local.test','Gerente2026!',['','tables','menu','reports','buttons','networks','kitchen']],['staff','garcom@local.test','Garcom2026!',['','kitchen']]]){
       const ctx=await ownedContext(),page=await ctx.newPage();observe(page);await login(page,email,password);await openTutorial(page);
       for(let index=0;index<7;index++){await selectStep(index,page);await assertStep(index,page);const links=await page.locator('.t-tour a[href^="/dashboard"]').evaluateAll(elements=>elements.map(element=>element.getAttribute('href')));assert(links.every(href=>allowed.map(routeUrl).includes(href)),`${role}, paso ${index+1}: enlace restringido ${links.join(',')}`);}
       await ctx.close();

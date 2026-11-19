@@ -23,7 +23,7 @@ function client(url) {
       const newCookie = response.headers.getSetCookie()[0]; if (newCookie) cookie = newCookie.split(';')[0];
       return { status: response.status, body: await response.json() };
     },
-    async login(email = 'ventas@matebar.com', password = 'DemoOwner-ChangeMe!') { const result = await this.action('auth.login', { email, password }); assert.equal(result.status, 200); return result; },
+    async login(email = 'ventas@matebar.com', password = 'Chamaii2026!') { const result = await this.action('auth.login', { email, password }); assert.equal(result.status, 200); return result; },
     cookie: () => cookie,
   };
 }
@@ -33,7 +33,7 @@ test('authentication, role enforcement, PIN scope, password revocation and safe 
   const owner = client(f.url), stranger = client(f.url), staff = client(f.url), pin = client(f.url);
   assert.equal((await stranger.action('entity.save', { entity: 'categories', item: { name: 'Hacked' } })).status, 401);
   assert.equal((await owner.action('auth.login', { email: 'ventas@matebar.com', password: 'bad' })).status, 401);
-  await owner.login(); await staff.login('garcom@local.test', 'DemoStaff-ChangeMe!');
+  await owner.login(); await staff.login('garcom@local.test', 'Garcom2026!');
   assert.equal((await owner.get()).body.viewer.user.role, 'OWNER');
   assert.equal((await staff.action('settings.save', { settings: { paused: true } })).status, 403);
   const state = (await stranger.get()).body;
@@ -43,25 +43,25 @@ test('authentication, role enforcement, PIN scope, password revocation and safe 
   assert.equal(state.settings.tvPin, '');
   assert.ok(!JSON.stringify(state).includes('scrypt:'));
   assert.equal((await pin.action('auth.pin', { pin: '9999' })).status, 401);
-  assert.equal((await pin.action('auth.pin', { pin: '8041' })).status, 200);
+  assert.equal((await pin.action('auth.pin', { pin: '1234' })).status, 200);
   assert.equal((await pin.get()).body.viewer.monitorAuthorized, true);
   assert.equal((await pin.action('settings.save', { settings: { paused: true } })).status, 401);
-  assert.deepEqual((await owner.action('staff.pinReveal', { id: 'staff-local' })).body.result, { pin: '8043' });
+  assert.deepEqual((await owner.action('staff.pinReveal', { id: 'staff-local' })).body.result, { pin: '3456' });
   assert.equal((await staff.action('staff.pinReveal', { id: 'staff-local' })).status, 403);
   const secondOwner = client(f.url); await secondOwner.login();
-  assert.equal((await owner.action('auth.password', { current: 'DemoOwner-ChangeMe!', newPassword: 'Changed2026!' })).status, 200);
+  assert.equal((await owner.action('auth.password', { current: 'Chamaii2026!', newPassword: 'Changed2026!' })).status, 200);
   assert.equal((await secondOwner.get()).body.viewer.user, null);
   assert.equal((await owner.get()).body.viewer.user.role, 'OWNER');
   assert.equal((await owner.action('auth.logout')).status, 200);
   assert.equal((await owner.get()).body.viewer.user, null);
-  assert.equal((await owner.action('auth.login', { email: 'ventas@matebar.com', password: 'DemoOwner-ChangeMe!' })).status, 401);
+  assert.equal((await owner.action('auth.login', { email: 'ventas@matebar.com', password: 'Chamaii2026!' })).status, 401);
   await owner.login('ventas@matebar.com', 'Changed2026!');
 });
 
 test('request lifecycle, duplicate protection, conversion, atomic claim and cancellation ownership', async t => {
   const f = await fixture(); t.after(() => f.close());
   const a = client(f.url), b = client(f.url), customer = client(f.url);
-  await a.login(); await b.login('gerente@local.test', 'DemoManager-ChangeMe!');
+  await a.login(); await b.login('gerente@local.test', 'Gerente2026!');
   const calls = await Promise.all(Array.from({ length: 5 }, () => customer.action('request.create', { token: 'table-05', type: 'CALL' })));
   assert.ok(calls.every(call => call.status === 200));
   const id = calls[0].body.result.id;
@@ -94,7 +94,7 @@ test('request lifecycle, duplicate protection, conversion, atomic claim and canc
 test('staff member can only complete own assigned requests; PIN cannot administer', async t => {
   const f = await fixture(); t.after(() => f.close());
   const owner = client(f.url), staff = client(f.url), customer = client(f.url);
-  await owner.login(); await staff.action('auth.pin', { staffId: 'staff-local', pin: '8043' });
+  await owner.login(); await staff.action('auth.pin', { staffId: 'staff-local', pin: '3456' });
   const request = (await customer.action('request.create', { token: 'table-01', type: 'CALL' })).body.result;
   await owner.action('request.accept', { id: request.id });
   assert.equal((await staff.action('request.complete', { id: request.id })).status, 403);
@@ -110,8 +110,8 @@ test('CRUD, foreign category protection, QR rotation and persisted database surv
   let f = await fixture(dbPath); t.after(async () => { await f.close(); rmSync(directory, { recursive: true, force: true }); });
   const owner = client(f.url); await owner.login();
   const category = (await owner.action('entity.save', { entity: 'categories', item: { name: 'Prueba' } })).body.result;
-  const product = (await owner.action('entity.save', { entity: 'products', item: { categoryId: category.id, name: 'Plato', price: 8041, available: true } })).body.result;
-  assert.equal(product.price, 8041);
+  const product = (await owner.action('entity.save', { entity: 'products', item: { categoryId: category.id, name: 'Plato', price: 1234, available: true } })).body.result;
+  assert.equal(product.price, 1234);
   assert.equal((await owner.action('entity.delete', { entity: 'categories', id: category.id })).status, 409);
   assert.equal((await owner.action('entity.save', { entity: 'tables', item: { number: 1 } })).status, 409);
   const rotated = (await owner.action('table.rotate', { id: 'mesa-05' })).body.result;
@@ -186,15 +186,15 @@ test('seed image editing, external buttons, currency and QR LAN settings persist
   assert.equal((await owner.action('entity.save',{entity:'products',item:{...seeded,imageUrl:'/assets/../secret'}})).status,400);
   const link=await owner.action('entity.save',{entity:'buttons',item:{label:'Instagram',type:'LINK',url:'https://example.com/menu'}});
   assert.equal(link.status,200);assert.equal(link.body.result.type,'LINK');
-  assert.equal((await owner.action('settings.save',{restaurant:{publicBaseUrl:'http://192.168.1.10:3001/path',currency:'USD',legalName:'Mate bar SRL',taxId:'8041'},settings:{currency:'BOB'}})).status,200);
+  assert.equal((await owner.action('settings.save',{restaurant:{publicBaseUrl:'http://192.168.1.10:3001/path',currency:'USD',legalName:'Mate bar SRL',taxId:'1234'},settings:{currency:'BOB'}})).status,200);
   const state=(await owner.get()).body;
-  assert.equal(state.restaurant.publicBaseUrl,'http://192.168.1.10:3001');assert.equal(state.restaurant.legalName,'Mate bar SRL');assert.equal(state.restaurant.taxId,'8041');
+  assert.equal(state.restaurant.publicBaseUrl,'http://192.168.1.10:3001');assert.equal(state.restaurant.legalName,'Mate bar SRL');assert.equal(state.restaurant.taxId,'1234');
   assert.equal(state.restaurant.currency,'USD');assert.equal(state.settings.currency,'USD');
   assert.equal((await owner.action('settings.save',{restaurant:{publicBaseUrl:'javascript:alert(1)'}})).status,400);
 });
 
 test('kitchen tickets require identification and advance once through all stages',async t=>{
-  const f=await fixture();t.after(()=>f.close());const owner=client(f.url),staff=client(f.url),customer=client(f.url);await owner.login();await staff.action('auth.pin',{staffId:'staff-local',pin:'8043'});
+  const f=await fixture();t.after(()=>f.close());const owner=client(f.url),staff=client(f.url),customer=client(f.url);await owner.login();await staff.action('auth.pin',{staffId:'staff-local',pin:'3456'});
   const payload={tableId:'mesa-05',items:[{productId:'produto-2',quantity:2}],notes:'Sin cebolla'};
   assert.equal((await customer.action('kitchen.create',payload)).status,401);
   const created=await staff.action('kitchen.create',payload);assert.equal(created.status,200);const id=created.body.result.id;
@@ -231,8 +231,8 @@ test('reports honour restaurant timezone and chosen period; backup preserves PIN
   const all=await(await fetch(f.url+'/api/export?format=csv&period=all',{headers:{cookie:owner.cookie()}})).text();assert.ok(all.includes(old.id));
   const exported=await owner.action('backup.export');assert.equal(exported.status,200);const backup=exported.body.result;
   assert.equal((await owner.action('backup.restore',{backup})).status,200);await owner.login();
-  assert.equal((await owner.action('staff.pinReveal',{id:'staff-local'})).body.result.pin,'8043');
-  const pin=client(f.url);assert.equal((await pin.action('auth.pin',{pin:'8041'})).status,200);
+  assert.equal((await owner.action('staff.pinReveal',{id:'staff-local'})).body.result.pin,'3456');
+  const pin=client(f.url);assert.equal((await pin.action('auth.pin',{pin:'1234'})).status,200);
   assert.equal((await owner.get()).body.requests.length,2);
 });
 

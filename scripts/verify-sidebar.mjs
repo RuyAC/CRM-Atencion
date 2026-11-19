@@ -9,7 +9,7 @@ import {createApp} from '../server/index.mjs';
 // A fresh browser, owned localhost server, and disposable SQLite only.
 // This verifier does not use the running installation or change its data.
 const require=createRequire(import.meta.url);
-const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'C:/Users/ruyal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const out=path.join(root,'.impeccable/review/sidebar-unified');
 const directory=await mkdtemp(path.join(os.tmpdir(),'mate-sidebar-ui-'));
@@ -72,7 +72,7 @@ try{
   const address=await app.listen();base=`http://127.0.0.1:${address.port}`;
   browser=await chromium.launch({headless:true,channel:'msedge'});context=await ownedContext();
   admin=await context.newPage();observe(admin);
-  await login(admin,'ventas@matebar.com','DemoOwner-ChangeMe!');
+  await login(admin,'ventas@matebar.com','Chamaii2026!');
 
   await check('Las diez rutas comparten ancho, tipografía, espaciado y colores del sidebar',async()=>{
     let baseline,activePalette,inactivePalette,activeWeight;
@@ -176,7 +176,7 @@ try{
     }
   });
   await check('Gerente y garzón muestran solo rutas permitidas; Cocina permanece accesible',async()=>{
-    for(const [name,email,password,allowed] of [['manager','gerente@local.test','DemoManager-ChangeMe!',['','tables','menu','networks','buttons','reports','kitchen']],['staff','garcom@local.test','DemoStaff-ChangeMe!',['','kitchen']]]){
+    for(const [name,email,password,allowed] of [['manager','gerente@local.test','Gerente2026!',['','tables','menu','networks','buttons','reports','kitchen']],['staff','garcom@local.test','Garcom2026!',['','kitchen']]]){
       const ctx=await ownedContext(),page=await ctx.newPage();observe(page);await login(page,email,password);
       assert.deepEqual(await page.locator('#admin-navigation nav a').evaluateAll(elements=>elements.map(element=>element.getAttribute('href'))),allowed.map(routeUrl));
       assert.equal(await page.locator('#admin-navigation a[href="/dashboard/billing"]').count(),0,`${name}: enlace de funciones restringido`);

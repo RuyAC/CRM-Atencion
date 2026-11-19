@@ -9,13 +9,13 @@ import {createApp} from '../server/index.mjs';
 // This batch owns its localhost server, disposable SQLite and fresh browser.
 // It never connects to the running installation or the primary database.
 const require = createRequire(import.meta.url);
-const {chromium} = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const {chromium} = require(process.env.PLAYWRIGHT_MODULE || 'C:/Users/ruyal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const out = path.join(root, '.impeccable/review/saas');
 const directory = await mkdtemp(path.join(os.tmpdir(), 'atencion-saas-ui-'));
 const routes = [
   ['/saas', 'Administración local', 'overview'],
-  ['/saas/accounts', 'Cuentas de Atencion', 'accounts'],
+  ['/saas/accounts', 'Cuentas de AUnToque', 'accounts'],
   ['/saas/restaurants', 'Restaurantes', 'restaurants'],
   ['/saas/activity', 'Actividad', 'activity'],
 ];
@@ -174,7 +174,7 @@ async function denial(name, credentials = null, pin = null) {
       assert.equal(body.accounts, undefined);
       deniedResponses.push({principal: name, route, status: response.status()});
       await denied.goto(base + route);
-      await denied.getByRole('heading', {name: response.status() === 401 ? 'Administración de Atencion' : 'Acceso reservado a administradores de Atencion', exact: true}).waitFor();
+      await denied.getByRole('heading', {name: response.status() === 401 ? 'Administración de AUnToque' : 'Acceso reservado a administradores de AUnToque', exact: true}).waitFor();
       const text = await denied.locator('body').innerText();
       for (const secret of ['admin@local.test', 'ventas@matebar.com', 'Administrador', 'owner-extra@local.test', 'Cuenta extra de prueba', 'csv-formula@local.test']) assert(!text.includes(secret), `${name}/${route}: expone ${secret}`);
       assert.equal(await denied.locator('.saas-account-table,.saas-account-cards,.saas-viewer').count(), 0);
@@ -196,10 +196,10 @@ try {
 
   await check('La cuenta inicial entra desde el acceso SaaS local', async () => {
     await page.goto(base + '/saas');
-    await page.getByRole('heading', {name: 'Administración de Atencion', exact: true}).waitFor();
+    await page.getByRole('heading', {name: 'Administración de AUnToque', exact: true}).waitFor();
     assert.equal(await page.getByLabel('Contraseña', {exact: true}).inputValue(), '');
     await page.getByLabel('Correo electrónico', {exact: true}).fill('admin@local.test');
-    await page.getByLabel('Contraseña', {exact: true}).fill('DemoOwner-ChangeMe!');
+    await page.getByLabel('Contraseña', {exact: true}).fill('Chamaii2026!');
     await page.getByRole('button', {name: 'Entrar a la administración', exact: true}).click();
     await page.getByRole('heading', {name: 'Administración local', exact: true}).waitFor();
     initial = await snapshot();
@@ -391,7 +391,7 @@ try {
 
   await check('Propietarios adicionales son cuentas sin recibir permiso de plataforma', async () => {
     restaurantContext = await ownedContext();
-    await action(restaurantContext, 'auth.login', {email: 'ventas@matebar.com', password: 'DemoOwner-ChangeMe!'});
+    await action(restaurantContext, 'auth.login', {email: 'ventas@matebar.com', password: 'Chamaii2026!'});
     await action(restaurantContext, 'entity.save', {entity: 'staff', item: {id: 'owner-saas-ui-extra', name: 'Cuenta extra de prueba', email: 'owner-extra@local.test', role: 'OWNER', active: true, password: 'ExtraOwner2026!', pin: '6789'}});
     await action(restaurantContext, 'entity.save', {entity: 'staff', item: {id: 'owner-saas-ui-formula', name: '=HYPERLINK("https://example.test","CSV")', email: 'csv-formula@local.test', role: 'OWNER', active: false, password: 'FormulaOwner2026!', pin: '7890'}});
     const updated = await snapshot();
@@ -416,10 +416,10 @@ try {
 
   for (const [name, credentials, pin] of [
     ['anonymous', null, null],
-    ['restaurant OWNER', {email: 'ventas@matebar.com', password: 'DemoOwner-ChangeMe!'}, null],
-    ['manager', {email: 'gerente@local.test', password: 'DemoManager-ChangeMe!'}, null],
-    ['staff', {email: 'garcom@local.test', password: 'DemoStaff-ChangeMe!'}, null],
-    ['PIN owner', null, {staffId: 'owner-local', pin: '8041'}],
+    ['restaurant OWNER', {email: 'ventas@matebar.com', password: 'Chamaii2026!'}, null],
+    ['manager', {email: 'gerente@local.test', password: 'Gerente2026!'}, null],
+    ['staff', {email: 'garcom@local.test', password: 'Garcom2026!'}, null],
+    ['PIN owner', null, {staffId: 'owner-local', pin: '1234'}],
     ['additional OWNER', {email: 'owner-extra@local.test', password: 'ExtraOwner2026!'}, null],
   ]) await check(`${name}: las cuatro rutas deniegan datos privados y el enlace reservado`, () => denial(name, credentials, pin));
 
@@ -438,7 +438,7 @@ try {
   await check('Salir limpia la información privada y conserva el formulario sin credenciales', async () => {
     await open('/saas');
     await page.getByRole('button', {name: 'Cerrar sesión', exact: true}).click();
-    await page.getByRole('heading', {name: 'Administración de Atencion', exact: true}).waitFor();
+    await page.getByRole('heading', {name: 'Administración de AUnToque', exact: true}).waitFor();
     assert.equal(await page.getByLabel('Correo electrónico', {exact: true}).inputValue(), '');
     assert.equal(await page.getByLabel('Contraseña', {exact: true}).inputValue(), '');
     assert(!(await page.locator('body').innerText()).includes('admin@local.test'));

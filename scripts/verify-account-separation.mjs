@@ -9,7 +9,7 @@ import {createApp} from '../server/index.mjs';
 // Focused verification owns its server, fresh browser and disposable database.
 // It never connects to port 3001 or changes the installation's restaurant data.
 const require = createRequire(import.meta.url);
-const {chromium} = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const {chromium} = require(process.env.PLAYWRIGHT_MODULE || 'C:/Users/ruyal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const out = path.join(root, '.impeccable/review/account-separation');
 const temporary = await mkdtemp(path.join(os.tmpdir(), 'atencion-account-separation-'));
@@ -56,7 +56,7 @@ async function restaurantLogin(page, email, expected = '/dashboard') {
   assert.equal(await page.getByLabel('Correo electrónico', {exact: true}).inputValue(), '');
   assert.equal(await page.getByLabel('Contraseña', {exact: true}).inputValue(), '');
   await page.getByLabel('Correo electrónico', {exact: true}).fill(email);
-  await page.getByLabel('Contraseña', {exact: true}).fill('DemoOwner-ChangeMe!');
+  await page.getByLabel('Contraseña', {exact: true}).fill('Chamaii2026!');
   await page.getByRole('button', {name: 'Entrar a mi cuenta', exact: true}).click();
   await page.waitForURL(base + expected);
   await page.getByRole('heading', {name: expected === '/saas' ? 'Administración local' : 'Panel principal', exact: true}).waitFor();
@@ -80,13 +80,13 @@ try {
 
   await check('El administrador SaaS entra y conserva la lista exclusiva de clientes', async () => {
     await platform.page.goto(base + '/saas/accounts');
-    await platform.page.getByRole('heading', {name: 'Administración de Atencion', exact: true}).waitFor();
+    await platform.page.getByRole('heading', {name: 'Administración de AUnToque', exact: true}).waitFor();
     assert.equal(await platform.page.getByLabel('Correo electrónico', {exact: true}).inputValue(), '');
     assert.equal(await platform.page.getByLabel('Contraseña', {exact: true}).inputValue(), '');
     await platform.page.getByLabel('Correo electrónico', {exact: true}).fill('admin@local.test');
-    await platform.page.getByLabel('Contraseña', {exact: true}).fill('DemoOwner-ChangeMe!');
+    await platform.page.getByLabel('Contraseña', {exact: true}).fill('Chamaii2026!');
     await platform.page.getByRole('button', {name: 'Entrar a la administración', exact: true}).click();
-    await platform.page.getByRole('heading', {name: 'Cuentas de Atencion', exact: true}).waitFor();
+    await platform.page.getByRole('heading', {name: 'Cuentas de AUnToque', exact: true}).waitFor();
     const snapshot = await request(platform.actor, '/api/saas/state');
     assert.equal(snapshot.status, 200);
     assert.equal(snapshot.body.viewer.email, 'admin@local.test');
@@ -116,7 +116,7 @@ try {
       ['staff.pinReveal', {id: 'owner-local'}],
       ['backup.export', {}],
     ]) assert.equal((await action(platform.actor, name, payload)).status, 403, name + ' debe estar denegado a la sesión SaaS');
-    assert.equal((await action(platform.actor, 'auth.pin', {staffId: platformId, pin: '8041'})).status, 401);
+    assert.equal((await action(platform.actor, 'auth.pin', {staffId: platformId, pin: '1234'})).status, 401);
   });
 
   await check('La navegación del SaaS ofrece login de cliente sin abrir directamente el panel', async () => {
@@ -159,7 +159,7 @@ try {
     assert.equal(denied.status, 403);
     assert.equal(denied.body.accounts, undefined);
     await restaurant.page.goto(base + '/saas/accounts');
-    await restaurant.page.getByRole('heading', {name: 'Acceso reservado a administradores de Atencion', exact: true}).waitFor();
+    await restaurant.page.getByRole('heading', {name: 'Acceso reservado a administradores de AUnToque', exact: true}).waitFor();
     assert.equal(await restaurant.page.locator('.saas-account-table,.saas-account-cards').count(), 0);
     await capture(restaurant.page, 'restaurant-denied-saas.png');
   });
@@ -184,7 +184,7 @@ try {
     await capture(mobile.page, 'mobile-restaurant.png');
     await restaurantLogin(mobile.page, 'admin@local.test', '/saas');
     await mobile.page.goto(base + '/saas/accounts');
-    await mobile.page.getByRole('heading', {name: 'Cuentas de Atencion', exact: true}).waitFor();
+    await mobile.page.getByRole('heading', {name: 'Cuentas de AUnToque', exact: true}).waitFor();
     await mobile.page.locator('.saas-account-cards').getByText('ventas@matebar.com', {exact: true}).waitFor();
     await capture(mobile.page, 'mobile-client-account.png');
   });
